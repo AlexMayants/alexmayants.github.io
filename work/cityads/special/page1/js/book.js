@@ -114,8 +114,8 @@ function initBookGameAllStep()
   // Выбрали дату в календаре
   function selectDate( date )
   {
-    var request = '?action=getschedule2' ;
-    var request = '/action.json?action=getschedule2' ;
+    // var request = '?action=getschedule2' ;
+    var request = './getschedule2.json' ;
     var promoCode = $('#js-promo-code').val() ;
     var data = { object : objectID, date : date, option : optionID, capacity : selectedCapacity, promo : promoCode } ;
 
@@ -158,7 +158,8 @@ function initBookGameAllStep()
   // Выбрали время
   function selectTime( start, time, promoCode )
   {
-    var request = '?action=selecttime' ;
+    // var request = '?action=selecttime' ;
+    var request = './selecttime.json' ;
     var data = { date : selectedDate, object : objectID, start : start, option : optionID, lang : langPrefix, capacity : selectedCapacity, promo : promoCode } ;
 
     if( typeof gtag === "function" ) gtag('event', 'select_time', { 'event_category' : 'step_2', 'event_label' : time } );

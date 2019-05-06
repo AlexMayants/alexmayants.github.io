@@ -1,0 +1,58 @@
+{
+	"promoText":null,
+	"discountText":null,
+	"error":"",
+	"message":"\u0414\u043b\u044f \u0440\u0430\u0441\u0447\u0435\u0442\u0430 \u0438\u0442\u043e\u0433\u043e\u0432\u043e\u0439 \u0441\u0443\u043c\u043c\u044b \u043d\u0435\u043e\u0431\u0445\u043e\u0434\u0438\u043c\u043e \u0432\u043e\u0439\u0442\u0438 \u0432 \u0441\u0438\u0441\u0442\u0435\u043c\u0443",
+	"relogin":false,
+	"customerDiscount":0,
+	"paymentOptions":{
+		"BOOK100":{
+			"CODE":"BOOK100",
+			"NAME":"\u041e\u043f\u043b\u0430\u0442\u0430 \u043e\u043d\u043b\u0430\u0439\u043d (100%)",
+			"PC":100,
+			"AMOUNT_TO_PAY":7500
+		},
+		"BOOK25":{
+			"CODE":"BOOK25",
+			"NAME":"25% (\u0441 \u0434\u043e\u043f\u043b\u0430\u0442\u043e\u0439 \u043d\u0430 \u043c\u0435\u0441\u0442\u0435)",
+			"PC":25,
+			"AMOUNT_TO_PAY":1875
+		}
+	},
+	"paymentHTML":"\r\n<label class=\"noselect\">\r\n<input class=\"radio-input js-payment-option js-payment-option-BOOK100\" type=\"radio\" data-code=\"BOOK100\" data-button-text=\"\u041f\u0435\u0440\u0435\u0439\u0442\u0438 \u043a \u043e\u043f\u043b\u0430\u0442\u0435\" checked>\r\n<span class=\"check-input-block\"><\/span>\r\n<span class=\"check-title\">\r\n\u041e\u043f\u043b\u0430\u0442\u0430 \u043e\u043d\u043b\u0430\u0439\u043d (100%)&nbsp;<span class=\"bold result-price\">7 500&nbsp;\u0440\u0443\u0431.<\/span>\r\n<\/span>\r\n<\/label>\r\n\r\n\r\n<label class=\"noselect\">\r\n<input class=\"radio-input js-payment-option js-payment-option-BOOK25\" type=\"radio\" data-code=\"BOOK25\" data-button-text=\"\u041f\u0435\u0440\u0435\u0439\u0442\u0438 \u043a \u043e\u043f\u043b\u0430\u0442\u0435\" >\r\n<span class=\"check-input-block\"><\/span>\r\n<span class=\"check-title\">\r\n25% (\u0441 \u0434\u043e\u043f\u043b\u0430\u0442\u043e\u0439 \u043d\u0430 \u043c\u0435\u0441\u0442\u0435)&nbsp;<span class=\"bold result-price\">1 875&nbsp;\u0440\u0443\u0431.<\/span>\r\n<\/span>\r\n<\/label>\r\n\r\n",
+	"date":"06.05.2019",
+	"time":"18:00",
+	"start":510,
+	"buttonText":"\u041f\u0435\u0440\u0435\u0439\u0442\u0438 \u043a \u043e\u043f\u043b\u0430\u0442\u0435",
+	"paymentCode":"BOOK100",
+	"customerTotal":"7 500",
+	"price":"7 500",
+	"oneCapacityPrice":"2 500",
+	"logged":"false",
+	"currencyName":null,
+	"maxCapacity":"8",
+	"occupied":0,
+	"free":8,
+	"combo":{
+		"1":"2500",
+		"2":"5000",
+		"3":"7500",
+		"4":"10000",
+		"5":"12500",
+		"6":"15000",
+		"7":"17500",
+		"8":"20000"
+	},
+	"capacity":3,
+	"numerals":[
+		"\u0431\u0438\u043b\u0435\u0442\u043e\u0432",
+		"\u0431\u0438\u043b\u0435\u0442",
+		"\u0431\u0438\u043b\u0435\u0442\u0430",
+		"\u0431\u0438\u043b\u0435\u0442\u0430",
+		"\u0431\u0438\u043b\u0435\u0442\u0430",
+		"\u0431\u0438\u043b\u0435\u0442\u043e\u0432",
+		"\u0431\u0438\u043b\u0435\u0442\u043e\u0432",
+		"\u0431\u0438\u043b\u0435\u0442\u043e\u0432",
+		"\u0431\u0438\u043b\u0435\u0442\u043e\u0432"
+	]
+}
