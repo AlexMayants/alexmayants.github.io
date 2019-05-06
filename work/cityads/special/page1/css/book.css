@@ -1456,6 +1456,7 @@
 
   .main .date-time .calendar .week 
   {
+    border-top: 1px solid #aaa ;
     border-left: 1px solid #aaa ;
     border-right: 1px solid #aaa ;
     margin: 0 ; 
