@@ -91,7 +91,7 @@
 
 {
 
-  height: 40px ;
+  height: 32px ;
 
   margin: 4px 7px 5px 15px ;
 
@@ -322,13 +322,12 @@
 {
   display: inline-block ;
   vertical-align: top ;
-  width: 100px ;
+  width: 200px ;
   height: 40px ;
   margin: 15px auto ;
-  background-image: url(../img/logosmall.png) ;
-  background-size: contain ;
-  background-repeat: no-repeat ;
-  background-position: center ;
+  display: inline-flex ;
+  align-content: center;
+  align-items: center;
 }
 
 .show-mobile-offer
@@ -593,7 +592,7 @@
 
   .mobile-logo
   {
-    width: 57px;
+    width: 120px;
     margin: 6px auto;
     position: relative;
   }
