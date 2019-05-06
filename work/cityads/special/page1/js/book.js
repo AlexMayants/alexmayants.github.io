@@ -42,7 +42,6 @@
     $('.js-customer-price').text( data.customerTotal ) ;
     $('.js-promo-text').text( data.promoText ) ;
     $('#js-payment-options').html( data.paymentHTML ) ;
-    $('.js-one-capacity-price').text( data.oneCapacityPrice ) ;
     $('.js-date').text( data.date ) ;
     $('.js-time').text( data.time ) ;
 
