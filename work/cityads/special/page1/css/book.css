@@ -34,13 +34,28 @@
   padding: 10px 0px;
   background-size: 0;
 }
+.header-all-steps .wrap .info-block .header-title span.h0 {
+  font-family: ModernaUnicase !important ;
+  font-size: 40px;
+  line-height: 40px;
+  letter-spacing: 0.17em;
+  text-transform: lowercase;
+  color: #D72323;
+  margin-bottom: 0.25em;
+}
 .header-all-steps .wrap .info-block .options {
   display: flex;
   justify-content: space-between;
-  padding: 10px 0px 14px 0px;
+  flex-wrap: wrap;
+  padding: 4px 0px 8px 0px;
 }
 .header-all-steps .wrap .info-block .options .item {
   width: auto;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+.header-all-steps .wrap .info-block .options .item + .item {
+  margin-left: 0.5em;
 }
 .header-all-steps .wrap .info-block .options .item .title {
   text-transform: uppercase;

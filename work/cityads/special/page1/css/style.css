@@ -43,6 +43,13 @@
   font-display: swap;
 }
 
+@font-face{
+  font-family:"ModernaUnicase";
+  src:url("../fonts/ModernaUnicase.eot?#iefix");
+  src:url("../fonts/ModernaUnicase.eot?#iefix") format("eot"),url("../fonts/ModernaUnicase.woff2") format("woff2"),url("../fonts/ModernaUnicase.woff") format("woff"),url("../fonts/ModernaUnicase.ttf") format("truetype");
+}
+
+
 
 body 
 {
