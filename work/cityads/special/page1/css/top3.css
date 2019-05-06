@@ -1,0 +1,195 @@
+.top3 
+{
+  padding: 0 ;
+}
+
+.top3 .row
+{
+  margin-left: 0 ;
+  margin-right: 0 ; 
+}
+
+.about-page .top3 .row
+{
+  background-color: #ddd ;
+}
+
+
+.top3-container
+{
+  width: 86vw ;
+  max-width: 86vw ;
+  margin: 0 auto ;
+  box-shadow: 0 0 40px 15px rgba(0,0,0,0.2);
+}
+
+.top3-container .row
+{
+  position: relative ;
+}
+
+.top3 .image
+{
+  width: 100% ;
+  height: 30vw ;
+  background-color: #000 ;
+}
+
+.top3 .right
+{
+  position: static ;
+}
+
+.top3 .inner
+{
+  position: absolute ;
+  left: 50% ;
+  top: 0px ;
+  bottom: 0px ;
+  display: flex;
+  align-items: center;
+  padding: 0 ;
+}
+
+.top3 .swapped .inner
+{
+  left: 0 ;
+  right: 50% ;
+}
+
+.top3 .inner .text
+{
+  max-width: 80% ;
+  margin: 0 auto ;
+}
+
+
+
+.top3 .inner h2
+{
+  font-family: 'Avenir-Light', Arial, Helvetica, sans-serif !important ;
+  font-size: 30px ;
+  width: 80% ;
+  text-align: center ;
+  text-transform: uppercase ;
+  letter-spacing: 1.2px ;
+  margin: 0 auto 20px auto ;
+  padding: 0 ;
+}
+
+.top3 .inner h2::after
+{
+  content: ' ' ;
+  max-width: 100%;
+  height: 1px ;
+  border-bottom: 1px solid #bf1f43 ;
+  display: block;
+  margin: 20px auto 10px auto ;
+  text-align: center ;
+}
+
+
+.top3 .inner .text
+{
+  width: 100% ;
+  margin: 0 auto ;
+  text-align: justify ;
+  font-size: 21px ;
+  line-height: 1.2 ;
+}
+
+@media (max-width: 1131px) {
+  .top3 .inner
+  {
+    padding: 40px 50px 60px 50px ;
+  }
+}
+
+@media (max-width: 1133px) {
+  .top3 .image
+  {
+    height: 200px ;
+  }
+
+  .top3 .inner h2
+  {
+    font-size: 18px ;
+    position:relative;
+    vertical-align: middle;
+  }
+
+  .top3 .inner
+  {
+    padding: 40px 20px 30px 20px ;
+  }
+}
+
+@media (max-width: 1133px) {
+  .top3 .image
+  {
+    height: 50vh ;
+    min-height: 200px ;
+  }
+
+  .top3 .counter
+  {
+    display: none ;
+  }
+
+  .top3 .inner 
+  {
+    padding: 40px 20px 50px 20px;
+  }
+
+  .top3 .inner
+  {
+    position: relative;
+    left:0;
+  }
+
+  .top3-container
+  {
+    width:100%;
+    max-width:100%;
+  }
+
+  .top3 .inner h2
+  {
+    text-transform: none;
+    width: 100%;
+    font-size: 24px;
+  }
+
+  .top3 .inner h2:after
+  {
+    display:none;
+  }
+
+  .top3 .inner h2::before,
+  .top3 .inner h2::after
+  {
+    content: ' ';
+    height: 100%;
+    display: block;
+    position: absolute;
+    width: 1px;
+    background-color: #bf1f43;
+  }
+
+  .top3 .inner h2::after
+  {
+    right: 0px;
+    top: -20px;
+  }
+
+  .top3 .inner .text
+  {
+    width: 100%;
+    max-width: 460px;
+    margin: 0 auto;
+    text-align: justify;
+    font-size: 14px;
+    line-height: 1.8;
+    margin-top: 20px;
+  }
+}

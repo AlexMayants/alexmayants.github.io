@@ -1,0 +1,712 @@
+﻿
+
+#js-recover-password,
+#js-recover-cancel
+{
+  display: block ;
+}
+
+#js-recover-cancel
+{
+  display: inline-block;
+  //width: 200px ;
+}
+
+.formular
+{
+  font-family: 'Avenir-Medium', Arial, Helvetica, sans-serif !important ; 
+  font-size: 18px ;
+}
+
+.formular .error
+{
+  color: red ;
+  font-size: 16px ;
+}
+
+.formular h4
+{
+  font-family: 'Avenir-Medium', Arial, Helvetica, sans-serif !important ; 
+}
+
+.formular label
+{
+  font-family: 'Avenir-Medium', Arial, Helvetica, sans-serif !important ; 
+  display: block ;
+  font-size: 16px ;
+  margin: 18px 0 3px 0 ;
+  font-weight: normal !important ;
+}
+
+.formular .w100
+{
+  width: 100% ;
+}
+
+.formular .w50
+{
+  width: 50% ;
+}
+
+.formular input,
+.formular select
+{
+  font-family: 'Avenir-Medium', Arial, Helvetica, sans-serif !important ; 
+  font-size: 14px ;
+  border: 1px solid #ddd ;
+  padding: 8px 6px ;
+}
+
+.formular select
+{
+  font-family: 'Avenir-Medium', Arial, Helvetica, sans-serif !important ; 
+  height: 38px ;
+}
+
+.formular input:disabled,
+.formular select:disabled
+{
+  background-color: #eee ;
+}
+
+.formular input[type="checkbox"]
+{
+  -webkit-appearance: checkbox ;
+  appearance: checkbox ;
+  vertical-align: text-bottom ;
+  margin: 0 0 2px 0;
+}
+
+.formular .chechbox-container
+{
+  margin: 8px 0 10px 0 ;
+}
+
+.formular .button
+{
+  font-family: 'Avenir-Medium', Arial, Helvetica, sans-serif !important ;
+  display: inline-block ;
+  font-size: 14px ;
+  line-height: 1.2 ;
+  border: 1px solid #0E4B8E;
+  border: 1px solid #bf1f43 ;
+  border-radius: 3px ;
+  padding: 8px 20px ; 
+  text-decoration: none ; 
+  text-transform: uppercase ;
+  margin: 20px 0 10px 0 ;
+  color: black ;
+  background-color: #fff ;
+  -webkit-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+
+.formular .button:hover
+{
+  background-color: #0E4B8E ;
+  background-color: #bf1f43 ;
+  color: white ;
+}
+
+.formular .button--small
+{
+  display: inline-block ;
+  vertical-align: top ;
+  line-height: 18px ;
+  margin: 0 0px 0 10px ; 
+}
+
+.formular .button--block
+{
+  display: block ;
+  margin: 5px 0 ;
+}
+
+.formular input.country-code
+{
+  width: 45px ;
+  display: inline-block ;
+}
+
+.formular input.phone-number
+{
+  display: inline-block ;
+}
+
+.formular .inline
+{
+  display: inline-block ;
+  vertical-align: top ;
+  margin: 0 10px 0 0 ;
+}
+
+.formular .inline:last-child
+{
+  margin-right: 0 ;
+}
+
+.change-password-container
+{
+  margin: 150px 0 40px 0 ;
+  padding: 20px ;
+  border: 1px solid #ddd ;
+}
+
+.js-scroll
+{
+  cursor: pointer ;
+  border-bottom: 1px solid #555 ;
+}
+
+
+
+.cabinet-login-container
+{
+  font-family: 'Avenir-Medium', Arial, Helvetica, sans-serif !important ; 
+  max-width: 600px ;
+  margin: 0 auto 50px auto ;
+  min-height: 450px ;
+  border: 1px solid #aaa ;
+  padding: 0 40px ;
+}
+
+.cabinet-login-container a
+{
+  color: #000 ;
+}
+
+
+.cabinet-login-container h3
+{
+  font-family: 'Avenir-Bold', Arial, Helvetica, sans-serif !important ; 
+  font-size: 42px ;
+}
+
+.register-message
+{
+    font-size: 20px;
+    line-height: 1.3;
+}
+
+/* CABINET */
+
+.cabinet-container
+{
+  padding-top: 100px ;
+  background-color: #4C4E55 ;
+  background-color: #fff ;
+  color: #fff ;
+  color: #000 ;
+}
+
+.cabinet-container .row
+{
+  max-width: 1100px;
+  margin: 0 auto;  
+}
+
+
+.cabinet-container .logout
+{
+  color: #555 ;
+  position: absolute ;
+  right: 20px ;
+  top: 30px ;
+  font-size: 18px ;
+}
+
+
+.cabinet-container h1
+{
+  font-family: 'Avenir-Bold', Arial, Helvetica, sans-serif !important ;
+  font-size: 42px ;
+  color: #fff ;
+  color: #000 ;
+}
+
+
+
+.cabinet-left,
+.cabinet-right
+{
+  display: inline-block ;
+  vertical-align: top ;
+  min-height: 100px ;
+}
+
+.cabinet-left
+{
+  width: 100% ;
+  padding: 0 0px 0 0 ;
+}
+
+.cabinet-right
+{
+  width: 100% ;
+  padding: 0 0 0 0px ;
+}
+
+.cabinet-inner
+{
+  font-family: 'Avenir-Medium', Arial, Helvetica, sans-serif !important ; 
+  border: 1px solid #ddd ;
+  padding: 20px ;
+  margin: 0 0 90px 0 ;
+  font-size: 18px ;
+  color: #fff ;
+  color: #000 ;
+}
+
+.cabinet-inner h4
+{
+  font-family: 'Avenir-Medium', Arial, Helvetica, sans-serif !important ; 
+  font-size: 22px ;
+  margin: 0 0 25px 0 ;
+  color: inherit ;
+}
+
+.cabinet-inner h4 a.logout
+{
+  font-size: 18px ;
+  color: #aaa ;
+}
+
+.cabinet-set-container
+{
+  font-family: 'Avenir-Medium', Arial, Helvetica, sans-serif !important ; 
+  min-height: 50px ;
+}
+
+.cabinet-one-set
+{
+  margin: 0 0 20px 0 ;
+  padding: 8px 14px 10px 14px ;
+  background-color: #f5f5f5 ;
+  //background-color: #6d6d6d ;
+}
+
+.cabinet-one-set.canceled
+{
+  background-color: #f9a2b0 ;
+  background-color: #733942 ;
+  color: #fff ;
+}
+
+p.canceled
+{
+  margin: 3px 0  ;
+  font-size: 18px ;
+  font-weight: bold ;
+}
+
+
+.cabinet-one-set .option-name
+{
+  font-family: 'Avenir-Bold', Arial, Helvetica, sans-serif !important ; 
+  margin: 0 0 10px 0 ;
+}
+
+
+.set-main-data span
+{
+  font-weight: bold ;
+}
+
+.cancel-booking
+{
+  background-color: white ;
+  margin: 8px 0 5px 0 ;
+  font-size: 16px ;
+  line-height: 26px ;
+  padding: 0 10px 3px 10px ;
+}
+
+.js-cancel-set-yes
+{
+  background-color: #f9a2b0 ; 
+  border: 1px solid #aaa ;
+  border-color: #444 ;
+}
+
+.cancel-booking:hover
+{
+  background-color: #0E4B8E ;
+  color: white ;
+}
+
+
+.js-customer-save-container
+{
+  margin-top: 23px ;
+}
+
+
+.cabinet-container h3 a.logout
+{
+  font-size: 18px ;
+  color: #aaa ;
+}
+
+.session-archive,
+.session-archive:hover
+{
+  color: #000 ;
+}
+
+
+.register-promo .cabinet-login-container
+{
+  padding: 0 20px; 
+}
+
+
+
+.customer-promo-container
+{
+  margin: 30px 0 0 0 ;
+  padding: 14px 0 0 0 ;
+  border-top: 1px solid #ddd ;
+}
+
+.customer-promo-container table
+{
+  width: 100% ;
+  border-collapse: collapse ;
+}
+
+.customer-promo-container table th
+{
+  background-color: #f3f3f3 ;
+}
+
+.customer-promo-container table td,
+.customer-promo-container table th
+{
+  font-family: 'Avenir-Medium', Arial, Helvetica, sans-serif !important ; 
+  font-size: 14px ;
+  padding: 3px 4px ;
+  border: 1px solid #ddd ;
+}
+
+.customer-promo-container table td:nth-child(3),
+.customer-promo-container table th:nth-child(3),
+.customer-promo-container table td:nth-child(4),
+.customer-promo-container table th:nth-child(4),
+.customer-promo-container table td:nth-child(5),
+.customer-promo-container table th:nth-child(5)
+{
+  text-align: right ;
+}
+
+.share-now,
+.share-done
+{
+  margin: 30px 0 0 0 ;
+  padding: 14px 0 0 0 ;
+  border-top: 1px solid #ddd ;  
+}
+
+.customer-share-container input
+{
+  width: 100% ;
+}
+
+
+.cabinet-container .photo-container
+{
+  border-top: 1px solid #ddd ;
+  margin: 40px 0 10px 0 ;
+  padding: 15px 0 0 0 ;
+}
+
+.cabinet-container .photo-container .one-photo-set
+{
+  margin: 0 0 30px 0 ;
+}
+
+.cabinet-container .photo-container p.set-info
+{
+  font-family: 'Avenir-Medium', Arial, Helvetica, sans-serif !important ; 
+  font-size: 18px ;
+}
+
+.cabinet-container .photo-container p.set-info span
+{
+  font-family: 'Avenir-Bold', Arial, Helvetica, sans-serif !important ; 
+  font-size: 18px ;  
+}
+
+.cabinet-container .photo-container p.set-info span:first-child
+{
+  margin-right: 20px ;
+}
+
+.cabinet-container .photo-container .outer
+{
+  position: relative ;  
+  display: inline-block ;
+}
+
+.cabinet-container .photo-container .one-pic
+{
+  width: 155px ;
+  height: 100px ;
+  margin: 0 5px 10px 5px ; 
+  box-shadow: 0 0 5px 2px rgba(0,0,0,0.2) ;
+}
+
+.cabinet-container .photo-container .outer .download
+{
+  position: absolute ;
+  z-index: 10 ;
+  right: 9px ;
+  bottom: 10px ;
+  width: 32px ;
+  height: 32px ;
+  background-image: url(../img/download.png) ;
+  background-size: 32px ;
+  opacity: 0.6 ;
+  cursor: pointer;
+}
+
+.cabinet-container .photo-container .outer .download:hover
+{
+  opacity: 1 ;
+}
+
+@media (max-width: 950px){
+  .formular .button
+  {
+    border-radius: 1px ;
+  }
+}
+
+
+.need-activation-icon
+{
+  display: inline-block; 
+  vertical-align: -2px ;
+  background-color: #de1943 ;
+  width: 13px ;
+  height: 13px ;
+  border-radius: 100% ;
+  margin: 0 0 0 5px ;
+}
+
+.cabinet-booking-total .additional-place-container
+{
+  margin: 10px 0 10px 0 ;
+  border-top: 1px solid #ddd ;
+}
+
+.cabinet-booking-total .additional-place-container p
+{
+  margin: 5px 0 ;
+}
+
+
+.cabinet-booking-total .additional-place-container a
+{
+  color: #000 ;
+  display: inline-block ;
+  border: 1px solid #bf1f43 ;
+  border-radius: 3px ;
+  padding: 2px 10px ;
+  margin: 0 0 5px 5px ;
+  background-color: #fff ;
+}
+
+.cabinet-booking-total .additional-place-container a:hover
+{
+  color: #fff ;
+  background-color: #bf1f43 ;
+}
+
+
+.cabinet-booking-total .additional-place-container .qty
+{
+  display: inline-block ;
+  border: 1px solid #aaa ;
+  border-radius: 3px ;
+  padding: 2px 10px ;
+  margin: 0 0 5px 0 ;
+  background-color: #fff ;
+}
+
+.cabinet-plus-outer
+{
+  max-width: 600px ;
+  margin: 20px auto 80px auto ;
+}
+
+.cabinet-plus-container
+{
+  padding: 20px 20px 10px 20px ;
+  border: 1px solid #ddd ;
+}
+
+.cabinet-plus-container h3
+{
+  margin: 0 0 25px 0 ;
+  padding: 0 ;
+}
+
+.cabinet-plus-container .option-name
+{
+  font-family: 'Avenir-Bold', Arial, Helvetica, sans-serif !important ; 
+  margin: 0 0 10px 0 ;
+}
+
+.cabinet-plus-container p.invitation
+{
+  font-family: 'Avenir-Demi', Arial, Helvetica, sans-serif !important ; 
+  font-size: 20px ;
+  margin: 25px 0 15px 0 ;
+  padding: 0 ;
+}
+
+
+.cabinet-plus-container .qty-option
+{
+  width: 100% ;
+  background-color: #ddd ;
+  padding: 4px 5px ;
+  margin: 5px 0 10px 0 ;
+  border-radius: 4px ;
+}
+
+.cabinet-plus-container .qty-option .qty
+{
+  font-family: 'Avenir-Demi', Arial, Helvetica, sans-serif !important ; 
+  display: inline-block ;
+  border: 1px solid #aaa ;
+  padding: 0px 6px ;
+  border-radius: 3px ;
+  background-color: #fff ;
+}
+
+.cabinet-plus-container .payment-button
+{
+  margin: 0 0 30px 0 ;
+}
+
+.cabinet-plus-container .capacity-action
+{
+  padding: 0 0 0 10px ;
+}
+
+.cabinet-plus-container .capacity-action.hide
+{
+  display: none ;
+}
+
+.cabinet-plus-container a.select-qty-option
+{
+  display: block ;
+  float: right ;
+  color: #000 ;
+  display: inline-block ;
+  border: 1px solid #bf1f43 ;
+  border-radius: 3px ;
+  padding: 0px 6px ;
+  margin: 0 ;
+  background-color: #fff ;
+}
+
+.cabinet-plus-container a.select-qty-option:hover
+{
+  color: #fff ;
+  background-color: #bf1f43 ;
+}
+
+.cabinet-plus-container .cancel
+{
+  display: block ;
+  margin: 20px 0 0 0 ; 
+  color: #aaa ;
+  text-decoration: underline ;
+}
+
+.cabinet-photo-outer
+{
+  max-width: 1082px ;
+  margin: 20px auto 100px auto ; 
+  padding: 0 ;
+}
+
+.cabinet-photo-container
+{
+  border: 1px solid #ccc ;
+  padding: 20px 20px 30px 20px ;
+}
+
+.cabinet-photo-container h3
+{
+  margin: 20px 5px 40px 5px ;
+}
+
+.cabinet-photo-container h3 span
+{
+  font-family: 'Avenir-Bold', Arial, Helvetica, sans-serif !important ; 
+}
+
+.cabinet-photo-container .one-photo
+{
+  display: inline-block ;
+  border: 1px solid #ccc ;
+  width: 150px ;
+  height: 150px ;
+  margin: 0 10px 30px 10px ;
+}
+
+.cabinet-photo-container .share-conteriner h3.header
+{
+  margin: 0 0 10px 0 ;
+}
+
+.cabinet-photo-share-outer
+{
+  min-height: calc(100vh - 400px);
+  max-width: 1082px ;
+  margin: 100px auto 100px auto ; 
+  padding: 0 ;
+}
+
+
+.cabinet-photo-share-outer .no-photo
+{
+}
+
+.cabinet-photo-share-container .one-photo
+{
+  display: inline-block ;
+  border: 1px solid #ccc ;
+  width: 150px ;
+  height: 150px ;
+  margin: 0 10px 30px 10px ;
+}
+
+.cabinet-photo-share-container .button-container a
+{
+  width: 340px ;
+}
+
+.cabinet-photo-share-container .share-container
+{
+  text-align: center ;
+}
+
+.cabinet-photo-share-outer .no-photo a
+{
+  display: block ;
+  margin: 30px 0 20px 0 ;
+  font-size: 18px ;
+  color: #000 ;
+  text-decoration: underline ;
+}
+
+.game-footnote
+{
+  font-size: 12px; 
+  margin: 2px 0 9px 0 ;
+}

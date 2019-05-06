@@ -1,0 +1,250 @@
+.map .header
+{
+  position: relative ;
+  z-index: 10 ;
+  width: 100% ;
+  background-color: #000 ;
+  box-shadow: 0 0 12px 5px rgba(0,0,0,0.4);
+  padding: 50px 0 ;
+}
+
+.map .header::before
+{
+  position: absolute ;
+  content: '' ;
+  z-index: -1 ;
+  top: 0 ;
+  left: 0 ;
+  right: 0 ;
+  bottom: 0 ; 
+  background-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(188,25,62,1) 95%) ;
+  opacity: 0.15 ;
+}
+
+
+.map .header h2
+{
+  font-family: 'Avenir-Light', Arial, Helvetica, sans-serif !important ; 
+  line-height: 2.4 ;
+  font-size: 34px ;
+  letter-spacing: 18px ;
+  width: 100% ;
+  text-align: center ;
+  color: #fff ;
+  text-transform: uppercase ;
+  margin: 0 ;
+  padding: 0 ;
+}
+
+.map
+{
+  position: relative ;
+  padding: 0px 0 !important ;
+  background-color: #fff ;
+  background-color: #000 ;
+}
+
+.map h2 b
+{
+  font-family: 'Avenir-Bold', Arial, Helvetica, sans-serif !important ; 
+}
+
+
+#map-container 
+{
+  height: calc(100vh - 220px) ;
+  background-color: black ;
+  position: relative ;
+}
+
+.map-over-outer
+{
+  width: 86vw ;
+  margin: 0 auto ;
+}
+
+.map .map-over
+{
+  position: absolute ;
+  z-index: 10 ;
+  bottom: 50px ;
+  width: 280px ;
+  padding: 15px;
+  background-color: #000;
+  box-shadow: 0 0 10px 3px rgba(0,0,0,0.2) ;
+  left: 50%;
+  margin-left: -140px;
+}
+
+.map .map-over::before
+{
+  position: absolute;
+  content: '';
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(188,25,62,1) 95%);
+  opacity: 0.15;
+}
+
+.map .map-over p.text
+{
+  width: 100% ;
+  text-align: center ;
+  letter-spacing: normal ;
+  font-size: 16px ;
+  font-family: 'Avenir-Light', Arial, Helvetica, sans-serif !important ; 
+  color: #fff ;  
+  margin: 0px;
+  border-left: 1px solid #bf1f43;
+  border-right: 1px solid #bf1f43
+}
+
+.map .map-over p.text-mobile
+{
+  display: none;
+}
+
+.map .map-over .button-container
+{
+  display: none;
+}
+
+.map .map-over .button-container a
+{
+  display: none ;
+  margin: 0 auto ;
+}
+
+.map .map-over .button-container a:first-child
+{
+  margin-bottom: 15px ;
+}
+
+.map .map-over .logo-container img.logo,
+.map .map-over .logo-container .city,
+.map .map-over p.nev-text
+{
+  display: none;
+}
+
+
+
+/*#map-container:after
+{
+    content: '';
+    height: 5%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(255,255,255,1) 90%);
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(255,255,255,1) 90%);
+    z-index: 1;
+}
+
+#map-container:before
+{
+    content: '';
+    height: 5%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(255,255,255,1) 90%);
+    background: linear-gradient(to top, rgba(0,0,0,0) 0%,rgba(255,255,255,1) 90%);
+    z-index: 1;
+}
+*/
+@media (max-width: 970px) {
+  #map-container 
+  {
+    min-height: 250px ;
+    height: 250px ;
+  }
+
+  #map-container iframe
+  {
+    height: 250px ; 
+  }
+
+  .map h2
+  {
+    font-size: 20px ;
+  }
+
+  .map h2 a
+  {
+    display: block ;
+    margin-top: 1px ;
+    font-size: 14px ;
+  }
+}
+
+
+@media (max-width: 950px) {
+  #map-container
+  {
+    height: calc(100vh - 80px) ;
+  }
+}
+
+
+@media (max-width: 768px){
+  #map-container
+  {
+    height: 100vh;
+  }
+
+  .map-over-outer
+  {
+    width: auto;
+  }
+
+  .map .map-over
+  {
+    background-color: #000;
+    width: 280px;
+    padding: 15px;
+    bottom: 40px;
+  }
+
+  .map .header
+  {
+    text-align: center;
+    padding: 30px 0px;
+  }
+
+  .map .header h2
+  {
+    letter-spacing: normal;
+    border-bottom: 1px solid #bf1f43;
+    display: inline;
+    font-size: 25px;
+  }
+
+  .map h2
+  {
+    font-size: 14px ;
+  }
+
+  .map h2 a
+  {
+    display: block ;
+    margin-top: 1px ;
+    font-size: 12px ;
+  }
+
+  .map .map-over p.text-desktop
+  {
+    display: none;
+  }
+
+  .map .map-over p.text-mobile
+  {
+    display: block;
+    padding: 0px 5px;
+  }
+}

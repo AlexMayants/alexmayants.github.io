@@ -1,0 +1,116 @@
+﻿
+.social-container-left
+{
+  position: fixed ;
+  z-index: 2000 ;
+  top: 280px ;
+  right: 0px ;
+  background: rgba(9,9,9,0.78) ;
+  padding: 0 4px 0 7px ; 
+}
+
+
+
+.social-container-left .social-container .icon
+{
+  fill: #FFFFFF;
+  stroke: #FFFFFF;
+}
+
+.social-container-left .social-container .item
+{
+  display: block ;
+  border-bottom: 1px solid #aaa ;
+  padding: 6px 0px;
+}
+
+.social-container-left .social-container .item:last-child
+{
+  border: none ;
+}
+
+
+.social-container-left .social-container .icon
+{
+  display: block ;
+  opacity: 1 ;
+  margin: 7px 0 ;
+  padding: 2px 0 ;
+  //opacity: 0.6 ;
+  vertical-align: bottom;
+  margin: 0px;
+  padding: 0px;
+}
+
+.social-container-left .social-container .fb 
+{
+  width: 35px;
+  height: 35px;
+}
+
+.social-container-left .social-container .vk 
+{
+  width: 35px;
+  height: 35px;
+}
+
+.social-container-left .social-container .ig 
+{
+  width: 35px;
+  height: 35px;
+}
+
+.social-container-left .social-container .yt 
+{
+  width: 35px;
+  height: 35px;
+}
+
+@media (max-width: 950px) {
+  .social-container-left
+  {
+    display: none ;
+  }
+
+}
+
+
+
+.done-share .row 
+{
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.social-share .header
+{
+  font-family: 'Avenir-Demi', Arial, Helvetica, sans-serif !important ;
+  font-size: 20px ;
+}
+
+.share-button
+{
+  display: inline-block ;
+  vertical-align: top ;
+  margin: 0 5px 0 0 ;
+  width: 34px ;
+  height: 34px ;
+  background-position: center ;
+  background-size: cover ;
+}
+
+.share-fb
+{
+  background-image: url(../img/fb2.svg) ;
+}
+
+.share-vk
+{
+  background-image: url(../img/vk2.svg) ;
+}
+
+.share-ig
+{
+  background-image: url(../img/ig2.svg) ;
+}
+

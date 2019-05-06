@@ -1,0 +1,202 @@
+.buy-sert-outer
+{
+  margin: 0 ;
+  padding: 0 ;  
+}
+
+.sert-container
+{
+  width: 500px ;
+  margin: 150px auto ;
+  border: 1px solid #ddd ;
+  padding: 20px ;
+  background-color: #f5f5f5 ;
+  border-radius: 3px ;
+  box-shadow: 0 0 10px 5px rgba(0,0,0,0.03) ;
+}
+
+.sert-container h2
+{
+  font-size: 24px;
+  color: #000;
+  text-transform: uppercase;
+  font-family: 'Avenir-Regular', Arial, Helvetica, sans-serif !important ;
+  text-align: center ;
+  margin: 10px 0 30px 0 ;
+  padding: 0 ;
+}
+
+.sert-container p.name
+{
+  font-size: 20px;
+  color: #000;
+  text-transform: uppercase;
+  font-family: 'Avenir-Demi', Arial, Helvetica, sans-serif !important ;
+  text-align: center ;
+  margin: 5px 0 5px 0 ;
+  padding: 0 ;  
+}
+
+
+.sert-container .spacer
+{
+  height: 30px ;
+}
+
+.sert-container p.footnote
+{
+  font-family: 'Avenir-Regular', Arial, Helvetica, sans-serif !important ;
+  color: #000 ;
+  font-size: 15px ;
+  margin: 10px 0 25px 0 ;
+}
+
+.sert-container p.amount
+{
+  font-size: 24px;
+  margin: 20px 0 5px 0  ;
+  padding: 0 ;
+  text-align: center ;
+}
+
+.sert-container a.main
+{
+  display: block ;
+  margin: 20px 0 ; 
+  width: 100% ;
+  text-align: center ;
+  color: #000 !important ;
+}
+
+
+.sert-container .button-form {
+  display: block;
+  max-width: 320px;
+  margin: 20px auto 0px auto;
+  color: #fff;
+  font-size: 15pt;
+  text-transform: uppercase;
+  font-family: 'Avenir-Regular', Arial, Helvetica, sans-serif;
+  background-color: #bf1f43;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  padding: 15px 0px;
+  cursor: pointer;
+  transition: ease .3s;
+  text-align: center;
+}
+
+.sert-container .payment-button-conatiner:not(.opacity02) .button-form:hover {
+  border-color: #bf1f43;
+  background-color: #fff;
+  color: #000;
+}
+.sert-container .error-message {
+  color: #bf1f43;
+  font-family: 'Avenir-Regular', Arial, Helvetica, sans-serif;
+  font-size: 9pt;
+  display: block;
+  text-align: center ;
+  padding-top: 20px;
+}
+
+.sert-container input[type="text"],
+.sert-container input[type="password"] {
+  margin-top: 5px;
+  background-color: #fff;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px 15px;
+  color: #000;
+  font-size: 14px;
+  font-family: 'Avenir-Regular', Arial, Helvetica, sans-serif;
+}
+.sert-container input[type="text"].error,
+.sert-container input[type="password"].error {
+  color: #bf1f43;
+  border-color: #bf1f43;
+}
+
+.sert-container label 
+{
+  font-size: 14px;
+  font-family: 'Avenir-Medium', Arial, Helvetica, sans-serif;
+  color: #000;
+  display: block;
+  width: 100%;
+  font-weight: normal;
+  margin-bottom: 0px;
+}
+
+
+
+@media (max-width: 950px) {
+  .buy-sert-outer
+  {
+    padding: 90px 0 ;
+  }
+
+  .sert-container
+  {
+    width: 500px ;
+    margin: 0px auto ;
+    border: 1px solid #ddd ;
+    padding: 20px ;
+    background-color: #f5f5f5 ;
+    border-radius: 3px ;
+    box-shadow: 0 0 10px 5px rgba(0,0,0,0.03) ;
+  }
+}
+
+
+@media (max-width: 550px) {
+  .buy-sert-outer
+  {
+    padding: 40px 0 10px 0 ;
+  }
+
+  .sert-container
+  {
+    width: 100% ;
+    padding: 0 20px ;
+    border: none ; ;
+    padding: 20px ;
+    background-color: #fff ;
+    box-shadow: none ;
+  }
+
+  .sert-container h2
+  {
+    font-size: 20px;
+    margin: 5px 0 10px 0 ;
+  }
+
+  .sert-container p.name
+  {
+    font-size: 18px;
+  }
+
+  .sert-container p.date,
+  .sert-container p.capacity,
+  .sert-container p.expire
+  {
+    font-size: 14px;
+  }
+
+  .sert-container p.amount
+  {
+    font-size: 20px;
+  }
+
+  .sert-container .button-form 
+  {
+    font-size: 16px;
+    margin: 10px auto ;
+    padding: 7px 5px;
+  }
+
+
+}
