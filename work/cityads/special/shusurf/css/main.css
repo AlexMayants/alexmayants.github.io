@@ -605,10 +605,22 @@ a:active .sh-footer-social__icon {
 }
 @media (max-width: 377px) {
   .sh-boat-features {
+  }
+  .sh-boat-features__item {
+    margin: 0;
+  }
+  .sh-boat-features__item--cats {
+    margin-left: 12px;
+  }
+  .sh-boat-features__item--engine {
+    margin-left: 12px;
+  }
+}
+@media (max-width: 360px) {
+  .sh-boat-features {
     flex-wrap: wrap;
     justify-content: center;
   }
-  .sh-boat-features__item,
   .sh-boat-features__item {
     margin: 0 10px 10px;
   }
