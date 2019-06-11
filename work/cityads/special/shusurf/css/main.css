@@ -1,6 +1,7 @@
 html, body {
   margin: 0;
   padding: 0;
+  scroll-behavior: smooth;
 }
 body {
   /*https://devhints.io/css-system-font-stack*/
@@ -8,7 +9,6 @@ body {
                "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   line-height: 1.57;
   color: #1b1c1e;
-  scroll-behavior: smooth;
 }
 body * {
   box-sizing: border-box;
@@ -28,7 +28,8 @@ body * {
 .sh-header {
   display: flex;
   align-items: baseline;
-  margin: 60px 20px 20px;
+  margin: 0 20px 20px;
+  padding: 60px 0 0;
   font-family: TrumpGothicPro;
   font-size: 30px;
   line-height: 1.2;
