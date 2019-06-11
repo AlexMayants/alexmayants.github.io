@@ -166,7 +166,7 @@ body * {
   margin: 0;
   padding: 0;
   display: flex;
-  justify-content: space-between;  
+  justify-content: space-between;
 }
 .sh-login-social__item {
   margin: 0;
@@ -210,6 +210,16 @@ body * {
   }
 }
 
+.sh-result {
+  margin: 36px 0;
+  display: none;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  color: #d48c50;
+  text-transform: uppercase;
+}
+
 .sh-form {
   display: flex;
   align-items: center;
@@ -242,7 +252,7 @@ body * {
 .sh-form__text--filled {
   border: solid 2px #e8eefe;
   padding: 10px 18px 9px;
-  background-color: #fff;
+  background-color: transparent;
 }
 .sh-form__submit {
   flex: 0 0;
@@ -264,6 +274,35 @@ body * {
 }
 .sh-form__submit--hidden {
   display: none;
+}
+
+.sh-form__placeholder {
+  position: absolute;
+  pointer-events: none;
+  white-space: nowrap;
+  padding: 12px 20px 11px;
+  font-family: TrumpGothicPro;
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+.sh-form__placeholder-entered {
+  color: #1b1c1e;
+  color: rgba(27, 28, 30, 0.8);
+}
+.sh-form__placeholder-remaining {
+  color: transparent;
+}
+.sh-form__placeholder--active {
+}
+.sh-form__placeholder--active .sh-form__placeholder-remaining {
+  color: #1b1c1e;
+  color: rgba(27, 28, 30, 0.3);
+}
+.sh-form__text--with-placeholder {
+  color: transparent;
+  caret-color: #1b1c1e;
 }
 
 .sh-get-code {
@@ -673,6 +712,9 @@ a:active .sh-footer-social__icon {
   text-transform: uppercase;
   margin: 40px 0 10px;
 }
+.sh-login__get-code-header {
+  display: none;
+}
 .sh-login__social {
   margin: 10px 0;
 }
@@ -717,7 +759,7 @@ a:active .sh-footer-social__icon {
   font-weight: bold;
   letter-spacing: 1px;
   text-align: center;
-  color: #d48c50;  
+  color: #d48c50;
   text-transform: uppercase;
 }
 
