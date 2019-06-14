@@ -97,6 +97,10 @@ body * {
   background-color: #e8eefe;
   background-color: rgba(232, 238, 254, 0.5);
   border: 4px solid transparent;
+  cursor: pointer;
+}
+.sh-calendar__cell:empty {
+  cursor: default;
 }
 .sh-calendar__cell--weekend {
   color: #e82e28;
@@ -115,6 +119,7 @@ body * {
     rgba(232, 46, 40, 0.8) 7px,
     rgba(232, 46, 40, 0.8) 8.4px
   );
+  cursor: default;
 }
 .sh-calendar__cell--selected {
   border-color: #62dce0;
@@ -684,6 +689,7 @@ a:active .sh-footer-social__icon {
 .sh-book {
 }
 .sh-book__month {
+  display: none;
 }
 .sh-book__month-header {
   margin: 30px 20px 10px;
@@ -692,6 +698,7 @@ a:active .sh-footer-social__icon {
   font-weight: 300;
 }
 .sh-book__day {
+  display: none;
 }
 .sh-book__day-header {
   margin: 30px 20px 10px;
