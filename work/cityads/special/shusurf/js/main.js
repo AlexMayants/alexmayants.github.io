@@ -1,4 +1,4 @@
-(function (document, window) {
+(function (document, window, $) {
   function toggleMenu(open) {
     var $button = $('.sh-top-menu__button');
 
@@ -25,8 +25,6 @@
   var selectedFeature = null;
 
   function highlightFeature(feature) {
-    var selectedItem, selectedText;
-
     $('.sh-boat-features__item--active').removeClass('sh-boat-features__item--active');
     $('.sh-boat-feature-text--active').removeClass('sh-boat-feature-text--active');
     $('.sh-menu__feature--active').removeClass('sh-menu__feature--active');
@@ -72,7 +70,7 @@
 
       if (prop && prop.name === 'position' && !transitioning) {
         transitioning = true;
-        $textSlider.trigger('to.owl.carousel', [prop.value - 2, undefined, true])
+        $textSlider.trigger('to.owl.carousel', [prop.value - 2, undefined, true]);
         transitioning = false;
       }
     });
@@ -82,10 +80,10 @@
 
       if (prop && prop.name === 'position' && !transitioning) {
         transitioning = true;
-        $photoSlider.trigger('to.owl.carousel', [prop.value - 2, undefined, true])
+        $photoSlider.trigger('to.owl.carousel', [prop.value - 2, undefined, true]);
         transitioning = false;
       }
-    })
+    });
   }
 
   function updatePlaceholder($input) {
@@ -113,10 +111,10 @@
 
     sendPhoneNumber(number, function (result) {
       if (result) {
-        $('.sh-login__phone-result').removeClass('sh-result--error').html('👍 На ваш номер отправлен код подтверждения').show();
+        $('.sh-login__phone-result').removeClass('sh-result--error').text('👍 На ваш номер отправлен код подтверждения').show();
         $('.sh-enter-code .sh-form__text').first().focus();
       } else {
-        $('.sh-login__phone-result').addClass('sh-result--error').html('👎 Что-то пошло не так').show();
+        $('.sh-login__phone-result').addClass('sh-result--error').text('👎 Что-то пошло не так').show();
       }
     });
   }
@@ -133,15 +131,14 @@
 
     sendSmsCode(code, function (result) {
       if (result) {
-        $('.sh-login__or-get-code-header').hide();
         $('.sh-login__get-code-header').hide();
         $('.sh-get-code').hide();
         $('.sh-login__enter-code-header').hide();
         $('.sh-enter-code').hide();
         $('.sh-login__phone-result').hide();
-        $('.sh-login__code-result').removeClass('sh-result--error').html('👍 Номер телефона добавлен').show();
+        $('.sh-login__code-result').removeClass('sh-result--error').text('👍 Номер телефона добавлен').show();
       } else {
-        $('.sh-login__code-result').addClass('sh-result--error').html('👎 Что-то пошло не так').show();
+        $('.sh-login__code-result').addClass('sh-result--error').text('👎 Что-то пошло не так').show();
       }
     });
   }
@@ -154,6 +151,21 @@
     })) {
       submitCodeForm();
     }
+  }
+
+  function sendName(name, callback) {
+    // TODO
+    setTimeout(function () {
+      callback(name);
+    });
+  }
+
+  function submitNameForm() {
+    var name = $('.sh-enter-name').serializeArray()[0].value;
+
+    sendName(name, function (name) {
+      displayUserName(name);
+    });
   }
 
   function initForm() {
@@ -184,6 +196,11 @@
       showMaskOnHover: false
     });
 
+    $('.sh-enter-name').on('submit', function (evt) {
+      evt.preventDefault();
+      submitNameForm();
+    });
+
     $('.sh-get-code').on('submit', function (evt) {
       evt.preventDefault();
       submitPhoneForm();
@@ -197,11 +214,11 @@
       }
 
       if (evt.key === 'ArrowLeft' && this.selectionStart === 0) {
-        $this.prev().focus();
+        $this.prev().focus().select();
       }
 
       if (evt.key === 'ArrowRight' && this.selectionStart === this.value.length) {
-        $this.next().focus();
+        $this.next().focus().select();
       }
 
       if (['0','1','2','3','4','5','6','7','8','9'].indexOf(evt.key) >= 0) {
@@ -210,13 +227,13 @@
         }
 
         setTimeout(function () {
-          $this.next().focus();
+          $this.next().focus().select();
         });
       }
 
       if (evt.key === 'Backspace') {
         setTimeout(function () {
-          $this.prev().focus();
+          $this.prev().focus().select();
         });
       }
     });
@@ -236,6 +253,7 @@
   }
 
   function getMonthData(callback) {
+    // TODO
     setTimeout(function () {
       callback({
         dates: [
@@ -254,6 +272,9 @@
           "2019-06-08",
           "2019-06-09"
         ],
+        selected: {
+          "2019-05-29": ['23:30']
+        },
         unavailable: [
           "2019-05-28",
           "2019-06-01"
@@ -265,6 +286,10 @@
   var MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
   var WEEKEND_DAYS = [6,0];
   var WEEK_LENGTH = 7;
+
+  var MAX_SETS = 4;
+  var selectedSets = [];
+  var currentDate = null;
 
   function displayMonthData(monthData) {
     var firstDate = new Date(monthData.dates[0]),
@@ -289,11 +314,12 @@
           return '<td' +
             ' data-date="' + date + '"' +
             ' class="sh-calendar__cell ' +
+              ((monthData.selected[date] && monthData.selected[date].length) ? ' sh-calendar__cell--selected sh-calendar__cell--current' : '') +
               (monthData.unavailable.indexOf(date) >= 0 ? ' sh-calendar__cell--unavailable' : '') +
               (WEEKEND_DAYS.indexOf(d.getDay()) >= 0 ? ' sh-calendar__cell--weekend' : '') +
             '"' +
-          '>28</td>';
-        }).join('')
+          '>' + d.getDate() + '</td>';
+        }).join('') +
       '</tr>';
     });
 
@@ -308,6 +334,7 @@
           name: 'Утро',
           price: 'Стандарт: 4500 ₽, Абонемент: 4000 ₽',
           dates: ["9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30"],
+          selected: [],
           unavailable: ["22:00"]
         },
         {
@@ -315,6 +342,7 @@
           price: 'Стандарт: 5500 ₽, Абонемент: 5000 ₽',
           isNight: true,
           dates: ["23:30", "00:00", "00:30", "01:00", "01:30", "02:00"],
+          selected: date === '2019-05-29' ? ["23:30"] : [],
           unavailable: []
         }
       ]);
@@ -345,6 +373,8 @@
                       ' class="sh-calendar__cell' +
                         (dayPart.isNight ? ' sh-calendar__cell--night' : '') +
                         (dayPart.unavailable.indexOf(hour) >= 0 ? ' sh-calendar__cell--unavailable' : '') +
+                        (dayPart.selected.indexOf(hour) >= 0 ? ' sh-calendar__cell--current' : '') +
+                        (selectedSets.filter(function (set) { return set.date === date && set.time === hour; }).length > 0 ? ' sh-calendar__cell--selected' : '') +
                       '"' +
                     '>' + hour + '</td>';
                   }).join('');
@@ -367,9 +397,54 @@
     $('.sh-book__day').show();
   }
 
+  function displaySelectedSets() {
+    var dates = [],
+        times = [];
+
+    selectedSets.sort(function (a, b) {
+      if (a.date > b.date) { return 1; }
+      if (a.date < b.date) { return -1; }
+
+      if (a.time > b.time) { return 1; }
+      if (a.time < b.time) { return -1; }
+
+      return 0;
+    });
+
+    selectedSets.forEach(function (set) {
+      if (dates.indexOf(set.date) < 0) {
+        dates.push(set.date);
+      }
+
+      times.push(set.time);
+    });
+
+    $('.sh-order-summary__item--date .sh-order-summary__item-value').text(dates.map(function (date) {
+      var d = new Date(date);
+      return d.getDate() + ' ' + MONTHS_OF_YEAR[d.getMonth()];
+    }).join(', '));
+
+    $('.sh-order-summary__item--time .sh-order-summary__item-value').text(times.join(', '));
+  }
+
   function initCalendar() {
     getMonthData(function (monthData) {
+      for (var date in monthData.selected) {
+        if (monthData.selected.hasOwnProperty(date)) {
+          var selectedTimes = monthData.selected[date];
+
+          selectedTimes.forEach(function (time) {
+            selectedSets = selectedSets.filter(function (set) { return !(set.date === date && set.time === time); });
+            selectedSets.push({
+              date: date, 
+              time: time
+            });
+          });
+        }
+      }
+
       displayMonthData(monthData);
+      displaySelectedSets();
     });
 
     $('.sh-book__month-table').on('click', '.sh-calendar__cell', function () {
@@ -380,19 +455,42 @@
         return;
       }
 
-      $('.sh-book__month-table').find('.sh-calendar__cell').removeClass('sh-calendar__cell--selected sh-calendar__cell--current');
-      $this.addClass('sh-calendar__cell--selected sh-calendar__cell--current sh-calendar__cell--in-progress');
+      currentDate = date;
+
+      $('.sh-book__month-table').find('.sh-calendar__cell.sh-calendar__cell--selected').not('.sh-calendar__cell--current').each(function () {
+        var date = $(this).data('date'),
+            thisDateSets = selectedSets.filter(function (set) { return set.date === date; });
+
+        if (thisDateSets.length === 0) {
+          $(this).removeClass('sh-calendar__cell--selected');
+        }
+      });
+
+      $this.addClass('sh-calendar__cell--selected sh-calendar__cell--in-progress');
 
       getDayData(date, function (dayData) {
+        if (currentDate !== date) { return; }
+
         $this.removeClass('sh-calendar__cell--in-progress');
 
+        dayData.forEach(function (dayPart) {
+          dayPart.selected.forEach(function (time) {
+            selectedSets = selectedSets.filter(function (set) { return !(set.date === date && set.time === time); });
+            selectedSets.push({
+              date: date, 
+              time: time
+            });
+          });
+        });
+
         displayDayData(date, dayData);
+        displaySelectedSets();
       });
     });
 
     $('.sh-book__day-table').on('click', '.sh-calendar__cell', function () {
       var $this = $(this),
-          date = $this.data('date');
+          time = $this.data('time');
 
       if ($this.hasClass('sh-calendar__cell--unavailable') || $this.is(':empty')) {
         return;
@@ -400,15 +498,23 @@
 
       if ($this.hasClass('sh-calendar__cell--selected')) {
         $this.removeClass('sh-calendar__cell--selected sh-calendar__cell--current');
+        selectedSets = selectedSets.filter(function (set) { return !(set.date === currentDate && set.time === time); });
+        displaySelectedSets();
         return;
       }
 
-      if ($('.sh-book__day-table .sh-calendar__cell--selected').length >= 4) {
+      if (selectedSets.length >= MAX_SETS) {
         return;
       }
 
-      $('.sh-book__day-table .sh-calendar__cell--current').removeClass('sh-calendar__cell--current');
-      $this.addClass('sh-calendar__cell--selected sh-calendar__cell--current');
+      $this.addClass('sh-calendar__cell--selected');
+      selectedSets = selectedSets.filter(function (set) { return !(set.date === currentDate && set.time === time); });
+      selectedSets.push({
+        date: currentDate, 
+        time: time
+      });
+
+      displaySelectedSets();
     });
   }
 
@@ -419,19 +525,30 @@
     });
   }
 
+  function displayUserName(name) {
+      $('.sh-login-social').hide();
+      $('.sh-login__social-header').hide();
+      $('.sh-login__social-result').text('👍 ' + name + ', Вы вошли!').show();
+
+      $('.sh-login__or-name-header').hide();
+      $('.sh-login__name-header').hide();
+      $('.sh-enter-name').hide();
+      $('.sh-enter-name .sh-form__text').val(name);
+  }
+
   function initSocial() {
     $('.sh-login-social').on('click', '.sh-login-social__button', function () {
       loginViaSocnet($(this).data('socnet-code'), function (name) {
-        $('.sh-login-social').hide();
-        $('.sh-login__social-header').hide();
-        $('.sh-login__social-result').html('👍 ' + name + ', Вы вошли!').show();
-
-        $('.sh-login__or-get-code-header').hide();
-        $('.sh-login__get-code-header').show();
+        displayUserName(name);
 
         $('.sh-order__button').prop('disabled', false);
         $('.sh-order__error').hide();
       });
+    });
+
+    $('.sh-login__social-result').on('click', function () {
+      $('.sh-login__name-header').show();
+      $('.sh-enter-name').show();
     });
   }
 
@@ -444,4 +561,4 @@
     initCalendar: initCalendar,
     initForm: initForm
   };
-})(document, window);
+})(document, window, jQuery);

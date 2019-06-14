@@ -251,6 +251,14 @@ body * {
   color: rgba(27, 28, 30, 0.3);
   opacity: 1;
 }
+.sh-form__text[type="number"] {
+  -moz-appearance: textfield;
+}
+.sh-form__text[type="number"]::-webkit-outer-spin-button,
+.sh-form__text[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 .sh-form__text + .sh-form__text {
   margin-left: 18px;
 }
@@ -720,11 +728,14 @@ a:active .sh-footer-social__icon {
   text-transform: uppercase;
   margin: 40px 0 10px;
 }
-.sh-login__get-code-header {
+.sh-login__name-header {
   display: none;
 }
 .sh-login__social {
   margin: 10px 0;
+}
+.sh-login__social-result {
+  cursor: pointer;
 }
 .sh-login__agree {
   margin: 20px 0;

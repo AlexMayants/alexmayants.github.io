@@ -373,7 +373,13 @@
 
       <div class="sh-login__social-result sh-result"></div>
 
-      <h3 class="sh-login__header sh-login__or-get-code-header">Или укажите ваш номер телефона:</h3>
+      <h3 class="sh-login__header sh-login__or-name-header">Или введите ваше имя:</h3>
+      <h3 class="sh-login__header sh-login__name-header">Введите ваше имя:</h3>
+      <form class="sh-enter-name sh-form" method="POST">
+        <input type="text" name="name" class="sh-form__text" value="" placeholder="Имя">
+        <button type="submit" class="sh-form__submit">Применить</button>
+      </form>
+
       <h3 class="sh-login__header sh-login__get-code-header">Укажите ваш номер телефона:</h3>
       <form class="sh-get-code sh-form" method="POST">
         <div class="sh-form__placeholder" for="phone">
@@ -395,10 +401,10 @@
 
       <h3 class="sh-login__header sh-login__enter-code-header">Введите код из SMS:</h3>
       <form class="sh-enter-code sh-form" method="POST">
-        <input type="text" maxlength="1" min="0" max="9" name="code[0]" data-char-index="0" class="sh-form__text" value="">
-        <input type="text" maxlength="1" min="0" max="9" name="code[1]" data-char-index="1" class="sh-form__text" value="">
-        <input type="text" maxlength="1" min="0" max="9" name="code[2]" data-char-index="2" class="sh-form__text" value="">
-        <input type="text" maxlength="1" min="0" max="9" name="code[3]" data-char-index="3" class="sh-form__text" value="">
+        <input type="number" maxlength="1" min="0" max="9" name="code[0]" data-char-index="0" class="sh-form__text" value="">
+        <input type="number" maxlength="1" min="0" max="9" name="code[1]" data-char-index="1" class="sh-form__text" value="">
+        <input type="number" maxlength="1" min="0" max="9" name="code[2]" data-char-index="2" class="sh-form__text" value="">
+        <input type="number" maxlength="1" min="0" max="9" name="code[3]" data-char-index="3" class="sh-form__text" value="">
         <button type="submit" class="sh-form__submit sh-form__submit--hidden">Отправить код</button>
       </form>
 
@@ -414,15 +420,15 @@
       </form>
 
       <div class="sh-order-summary">
-        <div class="sh-order-summary__item">
+        <div class="sh-order-summary__item sh-order-summary__item--count">
           <span class="sh-order-summary__item-name">Количество сетов</span>
           <span class="sh-order-summary__item-value">3</span>
         </div>
-        <div class="sh-order-summary__item">
+        <div class="sh-order-summary__item sh-order-summary__item--date">
           <span class="sh-order-summary__item-name">Дата бронирования</span>
           <span class="sh-order-summary__item-value">7 июня</span>
         </div>
-        <div class="sh-order-summary__item">
+        <div class="sh-order-summary__item sh-order-summary__item--time">
           <span class="sh-order-summary__item-name">Выбранное время</span>
           <span class="sh-order-summary__item-value">10:00, 13:30, 14:30, 18:30</span>
         </div>
