@@ -601,7 +601,7 @@ a:active .sh-footer-social__icon {
 .sh-boat-features {
   display: flex;
   justify-content: space-between;
-  margin: 50px 20px 60px;
+  margin: 50px 20px 0;
 }
 .sh-boat-features__item {
   text-align: center;
