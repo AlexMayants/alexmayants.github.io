@@ -28,42 +28,35 @@
 			var B = t[C];
 
 			function L() {
-				if (c[y]) {
+				if (c[y])
 					c[y](d, K, false)
-				} else if (c[a]) {
+				else if (c[a])
 					c[a](d, K)
-				}
 			}
 			
 			function K(e) {
 				var l = e.target
-				while (l && l.tagName !== 'A') {
-					l = l.parentElement
-				}
-				if (l && l.hasAttribute(O)) {
+				while (l && l.tagName !== 'A') l = l.parentElement
+				if (l && l.hasAttribute(O))
 					S(l.href)
-				}
 			}
 			
 			function S(u) {
-				if (B) {
+				if (B)
 					B.call(t, M, u)
-				} else {
+				else {
 					var x = new XMLHttpRequest();
 					x.open('POST', M, false);
 					x.send(u);
 				}
 			}
 
-			if (c[s] === 'complete' || c[s] === 'loaded' || c[s] === 'interactive') {
+			if (c[s] === 'complete' || c[s] === 'loaded' || c[s] === 'interactive')
 				L()
-			} else {
-				if (c[y]) {
-					c[y]('DOMContentLoaded', L, false)
-				} else if (i[a]) {
-					i[a]('onload', L)
-				}
-			}
+			else if (c[y])
+				c[y]('DOMContentLoaded', L, false)
+			else if (i[a])
+				i[a]('onload', L)
 		})(document, window, navigator, 'addEventListener', 'attachEvent', 'click', 'readyState', 'sendBeacon', 'data-cityads-link', 'https://track-check.example.com')
 	</script>
 </body>
