@@ -25,6 +25,8 @@
 
 	<script type="text/javascript">
 		(function (c,i,t,y,a,d,s,C,O,M) {
+			var B = t[C];
+
 			function L() {
 				if (c[y]) {
 					c[y](d, K, false)
@@ -38,27 +40,31 @@
 				while (l && l.tagName !== 'A') {
 					l = l.parentElement
 				}
-				if (l && l.hasAttribute(C)) {
+				if (l && l.hasAttribute(O)) {
 					S(l.href)
 				}
 			}
 			
 			function S(u) {
-				if (t[s]) {
-					t[s](O, u)
+				if (B) {
+					B.call(t, M, u)
 				} else {
 					var x = new XMLHttpRequest();
-					x.open('POST', O, false);
+					x.open('POST', M, false);
 					x.send(u);
 				}
 			}
 
-			if (c[y]) {
-				c[y]('DOMContentLoaded', L, false)
-			} else if (i[a]) {
-				i[a]('onload', L)
+			if (c[s] === 'complete' || c[s] === 'loaded' || c[s] === 'interactive') {
+				L()
+			} else {
+				if (c[y]) {
+					c[y]('DOMContentLoaded', L, false)
+				} else if (i[a]) {
+					i[a]('onload', L)
+				}
 			}
-		})(document, window, navigator, 'addEventListener', 'attachEvent', 'click', 'sendBeacon', 'data-cityads-link', 'https://track-check.example.com')
+		})(document, window, navigator, 'addEventListener', 'attachEvent', 'click', 'readyState', 'sendBeacon', 'data-cityads-link', 'https://track-check.example.com')
 	</script>
 </body>
 </html>
