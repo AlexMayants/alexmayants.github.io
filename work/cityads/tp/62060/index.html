@@ -38,15 +38,15 @@
 				var l = e.target
 				while (l && l.tagName !== 'A') l = l.parentElement
 				if (l && l.hasAttribute(O))
-					S(l.href)
+					S('https://' + l.host + M,  l.href)
 			}
 			
-			function S(u) {
+			function S(d, u) {
 				if (B)
-					B.call(t, M, u)
+					B.call(t, d, u)
 				else {
 					var x = new XMLHttpRequest();
-					x.open('POST', M, false);
+					x.open('POST', d, false);
 					x.send(u);
 				}
 			}
@@ -57,7 +57,7 @@
 				c[y]('DOMContentLoaded', L, false)
 			else if (i[a])
 				i[a]('onload', L)
-		})(document, window, navigator, 'addEventListener', 'attachEvent', 'click', 'readyState', 'sendBeacon', 'data-cityads-link', 'https://stvkr.com/track-check')
+		})(document, window, navigator, 'addEventListener', 'attachEvent', 'click', 'readyState', 'sendBeacon', 'data-cityads-link', '/track-check')
 	</script>
 </body>
 </html>
