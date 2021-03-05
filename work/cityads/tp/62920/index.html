@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+
+	<title>New JS tracker example</title>
+
+	<style type="text/css">
+		h1 {
+			margin-top: 0;
+		}
+
+		table {
+			width: 100%;
+		}
+
+		textarea {
+			box-sizing: border-box;
+			width: 100%;
+			min-height: 280px;
+			white-space: nowrap;
+		}
+
+		#app-log {
+			min-height: 200px;
+		}
+	</style>
+
+	<script type="text/javascript">
+		var logLines = [];
+
+		function log(str) {
+			function pad(d) {
+				return (d < 10 ? '0' : '') + d;
+			}
+
+			var d = new Date(),
+				prefix = '[' +
+					d.getFullYear() + '-' + pad(d.getMonth()) + '-' + pad(d.getDay()) + ' ' +
+					pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()) +
+				']';
+
+			logLines.push(prefix + ' ' + str);
+
+			setTimeout(function () {
+				var logField = document.getElementById('app-log');
+
+				if (logField) {
+					logField.scrollTop = logField.scrollHeight;
+				}
+			}, 120);
+		}
+
+		function displayLog() {
+			var logField = document.getElementById('app-log');
+
+			if (logField) {
+				logField.value = logLines.join('\n');
+			}
+		}
+		setInterval(displayLog, 100);
+
+		var originalGetItem = localStorage.getItem;
+		var originalSetItem = localStorage.setItem;
+		var originalRemoveItem = localStorage.originalSetItem;
+
+		localStorage.getItem = function (name) {
+			log('localStorage.getItem(' + name + ')');
+			return originalGetItem.call(this, name);
+		};
+		localStorage.setItem = function (name, value) {
+			log('localStorage.setItem(' + name + ', ' + value + ')');
+			return originalSetItem.call(this, name, value);
+		};
+		localStorage.removeItem = function (name) {
+			log('localStorage.removeItem(' + name + ')');
+			return originalRemoveItem.call(this, name);
+		};
+
+		var originalOpen = XMLHttpRequest.prototype.open;
+		var originalSend = XMLHttpRequest.prototype.send;
+
+		XMLHttpRequest.prototype.open = function () {
+			var args = [...arguments];
+			log('XHR.open(' + args.join(', ') + ')');
+			originalOpen.apply(this, args);
+		}
+
+		XMLHttpRequest.prototype.send = function () {
+			var args = [...arguments];
+			log('XHR.send(' + args.join(', ') + ')');
+			originalSend.apply(this, args);
+		}
+	</script>
+
+	<script type="text/javascript" id="tracking-script">
+		(function (window, document, localStorageName) {
+			function CAMagicTracker(_settingsCacheName, _urlCacheName, _clickIdPrefix, _trackDataCacheName, _settingsUrl, _offerSecrets, _settingsCacheLifetime, _trackDelay) {
+				this.settingsCacheName = _settingsCacheName;
+				this.urlCacheName = _urlCacheName;
+				this.clickIdPrefix = _clickIdPrefix;
+				this.trackDataCacheName = _trackDataCacheName;
+				this.settingsUrl = _settingsUrl;
+				this.offerSecrets = _offerSecrets;
+				this.settingsCacheLifetime = _settingsCacheLifetime;
+				this.trackDelay = _trackDelay;
+
+				this.readSavedSettings();
+
+				this.settings = {};
+
+				var requestSecrets = [];
+
+				for (var i = 0; i < this.offerSecrets.length; i++) {
+					var secret = this.offerSecrets[i];
+
+					if (this.savedSettings[secret] && (new Date(this.savedSettings[secret].date + this.settingsCacheLifetime) > new Date())) {
+						this.settings[secret] = this.savedSettings[secret].settings || {};
+					} else {
+						requestSecrets.push(secret);
+					}
+				}
+
+				if (requestSecrets.length === 0) {
+					this.processSettings();
+				} else {
+					this.loadSettings(requestSecrets);
+				}
+
+				this.scheduleFlushPendingTrackData();
+			}
+
+			CAMagicTracker.prototype.readLS = function (name) {
+				try {
+					return window[localStorageName].getItem(name);
+				} catch (e) {
+					return null;
+				}
+			};
+
+			CAMagicTracker.prototype.writeLS = function (name, value) {
+				try {
+					return window[localStorageName].setItem(name, value);
+				} catch (e) {
+					return null;
+				}
+			};
+
+			CAMagicTracker.prototype.removeLS = function (name) {
+				try {
+					return window[localStorageName].removeItem(name);
+				} catch (e) {
+					return null;
+				}
+			};
+
+			CAMagicTracker.prototype.readSavedSettings = function () {
+				this.savedSettings = {};
+
+				try {
+					this.savedSettings = JSON.parse(this.readLS(this.settingsCacheName));
+
+					if (!this.savedSettings) {
+						this.savedSettings = {};
+					}
+				} catch (e) {}
+			};
+
+			CAMagicTracker.prototype.writeSavedSettings = function () {
+				this.writeLS(this.settingsCacheName, JSON.stringify(this.savedSettings));
+			};
+
+			CAMagicTracker.prototype.loadSettings = function (secrets) {
+				var self = this,
+					secret;
+
+				var xhr = new XMLHttpRequest();
+				xhr.open('GET', this.settingsUrl + encodeURIComponent(secrets.join(',')), true);
+				xhr.responseType = 'json';
+				xhr.onload = function () {
+					if (xhr.status !== 200) {
+						self.saveCurrentUrl();
+					} else {
+						for (secret in xhr.response) {
+							if (xhr.response.hasOwnProperty(secret)) {
+								self.settings[secret] = xhr.response[secret];
+								self.savedSettings[secret] = {
+									data: xhr.response[secret],
+									date: +(new Date())
+								};
+							}
+						}
+
+						self.writeSavedSettings();
+						self.processSettings();
+					}
+				};
+				xhr.onerror = function () {
+					self.saveCurrentUrl();
+				};
+				xhr.send();
+			};
+
+			CAMagicTracker.prototype.getPreviousUrls = function () {
+				try {
+					var previousUrls = JSON.parse(this.readLS(this.urlCacheName));
+
+					if (!previousUrls || !previousUrls.length) {
+						return [];
+					}
+
+					return previousUrls;
+				} catch (e) {
+					return [];
+				}
+			};
+
+			CAMagicTracker.prototype.saveCurrentUrl = function () {
+				var url = window.location.href,
+					previousUrls = this.getPreviousUrls();
+
+				previousUrls.push(url);
+
+				this.writeLS(this.urlCacheName, JSON.stringify(previousUrls));
+			};
+
+			CAMagicTracker.prototype.clearPreviousUrls = function () {
+				this.removeLS(this.urlCacheName);
+			};
+
+			CAMagicTracker.prototype.saveClickId = function (secret, clickId) {
+				this.writeLS(this.clickIdPrefix + secret, clickId);
+			};
+
+			CAMagicTracker.prototype.getClickId = function (secret) {
+				return this.readLS(this.clickIdPrefix + secret);
+			};
+
+			CAMagicTracker.prototype.processSettings = function () {
+				this.processUrls();
+
+				if (document.readyState === 'loading') {
+					if (window.addEventListener) {
+						window.addEventListener('DOMContentLoaded', onLoad, false);
+					} else if (window.attachEvent)  {
+						window.attachEvent('load', onLoad);
+					}
+				} else {
+					this.processHtml();
+				}
+
+				var self = this;
+
+				function onLoad() {
+					self.processHtml();
+				}
+				var i,
+					secret,
+					clickId,
+					orderId,
+					urls = this.getPreviousUrls();
+
+				urls.push(window.location.href);
+
+				for (i = 0; i < this.offerSecrets.length; i++) {
+					secret = this.offerSecrets[i];
+
+					if (!this.detectHit(secret, urls)) { continue; }
+
+					if (!(clickId = this.detectClickId(secret, urls))) { continue; }
+
+					this.saveClickId(secret, clickId);
+					this.clearPreviousUrls();
+					break;
+				}
+
+				var html = document.documentElement.outerHTML;
+
+				for (i = 0; i < this.offerSecrets.length; i++) {
+					secret = this.offerSecrets[i];
+					clickId = this.getClickId(secret);
+
+					if (!clickId) { continue; }
+
+					if (!this.detectOrder(secret, html)) { continue; }
+
+					if (!(orderId = this.detectOrderId(secret, html))) { continue; }
+
+					this.trackOrder(secret, clickId, orderId, this.detectOtherStuff(secret, html));
+				}
+			};
+
+			CAMagicTracker.prototype.processUrls = function () {
+				var urls = this.getPreviousUrls();
+
+				urls.push(window.location.href);
+
+				for (var i = 0; i < this.offerSecrets.length; i++) {
+					var secret = this.offerSecrets[i],
+						clickId;
+
+					if (!this.detectHit(secret, urls)) { continue; }
+
+					if (!(clickId = this.detectClickId(secret, urls))) { continue; }
+
+					this.saveClickId(secret, clickId);
+					this.clearPreviousUrls();
+					break;
+				}
+			};
+
+			CAMagicTracker.prototype.processHtml = function () {
+				var html = document.documentElement.outerHTML;
+
+				for (var i = 0; i < this.offerSecrets.length; i++) {
+					var secret = this.offerSecrets[i],
+						clickId = this.getClickId(secret),
+						orderId;
+
+					if (!clickId) { continue; }
+
+					if (!this.detectOrder(secret, html)) { continue; }
+
+					if (!(orderId = this.detectOrderId(secret, html))) { continue; }
+
+					this.trackOrder(secret, clickId, orderId, this.detectOtherStuff(secret, html));
+				}
+			};
+
+			CAMagicTracker.prototype.detectHit = function (secret, urls) {
+				var settings = this.settings[secret],
+					hitDetectors = settings && settings.detectCityRegexps;
+
+				return !!this.findFirstMatchNameAndValue(hitDetectors, urls);
+			};
+
+			CAMagicTracker.prototype.detectClickId = function (secret, urls) {
+				var settings = this.settings[secret],
+					clickIdDetectors = settings && settings.detectClickIdRegexps;
+
+				var match = this.findFirstMatchNameAndValue(clickIdDetectors, urls);
+
+				if (match) {
+					return match[1][1];
+				}
+
+				return false;
+			};
+
+			CAMagicTracker.prototype.detectOrder = function (secret, html) {
+				var settings = this.settings[secret],
+					orderDetectors = settings && settings.detectOrderCompletedRegexps;
+
+				return !!this.findFirstMatchNameAndValue(orderDetectors, [html]);
+			};
+
+			CAMagicTracker.prototype.detectOrderId = function (secret, html) {
+				var settings = this.settings[secret],
+					orderIdDetectors = settings && settings.detectOrderIDRegexps;
+
+				var match = this.findFirstMatchNameAndValue(orderIdDetectors, [html]);
+
+				if (match) {
+					return match[1][1];
+				}
+
+				return false;
+			};
+
+			CAMagicTracker.prototype.detectOtherStuff = function (secret, html) {
+				var settings = this.settings[secret],
+					stuffDetectors = settings && settings.otherRegexps;
+
+				return this.findAllMatches(stuffDetectors, html);
+			};
+
+			CAMagicTracker.prototype.findFirstMatchNameAndValue = function (regexpObj, strings) {
+				for (var regexpName in regexpObj) {
+					if (regexpObj.hasOwnProperty(regexpName) && regexpObj[regexpName]) {
+						var regexp = new RegExp(regexpObj[regexpName]);
+
+						if (regexp) {
+							for (var i = 0; i < strings.length; i++) {
+								var match = strings[i].match(regexp);
+
+								if (match) {
+									return [regexpName, match];
+								}
+							}
+						}
+					}
+				}
+
+				return false;
+			};
+
+			CAMagicTracker.prototype.findAllMatches = function (regexpObj, string) {
+				var matches = {};
+
+				for (var regexpName in regexpObj) {
+					if (regexpObj.hasOwnProperty(regexpName) && regexpObj[regexpName]) {
+						var regexp = new RegExp(regexpObj[regexpName]);
+
+						if (regexp) {
+							var match = string.match(regexp);
+
+							if (match && match[1]) {
+								matches[regexpName] = match[1];
+							}
+						}
+					}
+				}
+
+				return matches;
+			};
+
+			CAMagicTracker.prototype.trackOrder = function (secret, clickId, orderId, matches) {
+				var settings = this.settings[secret],
+					trackDomain = settings && settings.trackDomain;
+
+				if (!trackDomain) { return; }
+
+				var self = this,
+					trackData = {
+						campaignSecret: secret,
+						click_id: clickId,
+						order_id: orderId,
+						matches: matches,
+						timestamp: +(new Date())
+					},
+					data = trackDomain + '/magic-truck?data=' + encodeURIComponent(JSON.stringify(trackData));
+
+				this.sendTrackData(
+					data,
+					function () {},
+					function (data) {
+						self.pushTrackData(data);
+						self.scheduleFlushPendingTrackData();
+					}
+				);
+			};
+
+			CAMagicTracker.prototype.sendTrackData = function (data, cb, errCb) {
+				var xhr = new XMLHttpRequest();
+				xhr.open('POST', data, true);
+				xhr.onload = function () {
+					if (xhr.status !== 200) {
+						errCb(data);
+					} else {
+						cb(data);
+					}
+				};
+				xhr.onerror = function () {
+					errCb(data);
+				};
+				xhr.send();
+			};
+
+			CAMagicTracker.prototype.getPendingTrackData = function () {
+				try {
+					var trackData = JSON.parse(this.readLS(this.trackDataCacheName));
+
+					if (!trackData || !trackData.length) {
+						return [];
+					}
+
+					return trackData;
+				} catch (e) {
+					return [];
+				}
+			};
+
+			CAMagicTracker.prototype.pushTrackData = function (data) {
+				var trackData = this.getPendingTrackData();
+
+				trackData.push(data);
+
+				this.replaceAllTrackData(trackData);
+			};
+
+			CAMagicTracker.prototype.replaceAllTrackData = function (trackData) {
+				this.writeLS(this.trackDataCacheName, JSON.stringify(trackData));
+			};
+
+			CAMagicTracker.prototype.clearPendingTrackData = function () {
+				this.removeLS(this.trackDataCacheName);
+			};
+
+			CAMagicTracker.prototype.scheduleFlushPendingTrackData = function () {
+				var self = this;
+
+				clearTimeout(this.nextTrackTimer);
+				setTimeout(function () {
+					self.flushPendingTrackData();
+				}, this.trackDelay);
+			};
+
+			CAMagicTracker.prototype.flushPendingTrackData = function () {
+				if (this.isFlushing) { return; }
+
+				this.isFlushing = true;
+
+				var trackData = this.getPendingTrackData();
+
+				if (!trackData.length) { return; }
+
+				var self = this,
+					processedCount = 0,
+					erroredData = [];
+
+				for (var i = 0; i < trackData.length; i++) {
+					this.sendTrackData(
+						trackData[i],
+						function () {
+							processedCount++;
+							checkTrackingFinished();
+						},
+						function (data) {
+							processedCount++;
+							erroredData.push(data);
+							checkTrackingFinished();
+						}
+					);
+				}
+
+				function checkTrackingFinished() {
+					if (processedCount < trackData.length) { return; }
+
+					if (erroredData.length) {
+						self.replaceAllTrackData(erroredData);
+						self.scheduleFlushPendingTrackData();
+					} else {
+						self.clearPendingTrackData();
+					}
+
+					self.isFlushing = false;
+				}
+			};
+
+			window.CAMagicTracker = CAMagicTracker;
+		})(window, document, 'localStorage');
+
+		var caMT = new CAMagicTracker(
+			'ca_magic_truck_settings',
+			'ca_magic_truck_urls',
+			'ca_magic_truck_click_id_',
+			'ca_magic_truck_data',
+			'https://magic-truck.cityads.com/settings/',
+			['foo', 'bar'],
+			600000,
+			10000
+		);
+	</script>
+</head>
+<body>
+	<h1>New JS tracker example</h1>
+
+	<p>
+		Это пример работы нового JS-трекера.
+		<button id="save-tracking-script">Сохранить скрипт</button>
+		<button id="copy-tracking-script">Скопировать скрипт</button>
+		<button id="clear-ls">Очистить хранилище</button>
+	</p>
+
+	<p>
+		Это пример успешного заказа: order_id=12345, order_cost=54321.
+	</p>
+
+	<table cellspacing="8">
+		<tr>
+			<td>
+				Введите данные, которые будут сохранены в кеше настроек.
+				<textarea id="saved-settings">
+{
+  "foo": {
+    "settings": {
+      "detectCityRegexps": { "a": "utm_source=cityads", "b": "Z:" },
+      "detectClickIdRegexps": { "c": "[?&]click_id=([^&]+)" },
+      "detectOrderCompletedRegexps": { "d": "успешн[а-я]+ заказ[а-я]*" },
+      "detectOrderIDRegexps": { "e": "order_id=(\\d+)" },
+      "otherRegexps": { "order_cost": "order_cost=(\\d+)" },
+      "trackDomain": "https://track-it-all.cityads.com"
+    },
+    "date": 1640984399000
+  },
+  "bar": {
+    "settings": {},
+    "date": 1640984399000
+  }
+}
+				</textarea>
+				<button id="replace-saved-settings">Установить</button>
+				Обновите страницу, чтобы пронаблюдать работу с заданным кешем настроек
+			</td>
+			<td>
+				Введите данные, которые будут сохранены в кеше URL'ов.
+				<textarea id="pending-urls">
+[
+  "https://example.com/store?utm_source=cityads",
+  "https://example.com/store?click_id=azazaza&click_uidi=ololo"
+]
+				</textarea>
+				<button id="replace-pending-urls">Установить</button>
+				Обновите страницу, чтобы пронаблюдать обработку сохранённых URL'ов
+			</td>
+			<td>
+				Введите данные, которые будут сохранены в кеше отправки.
+				<textarea id="pending-data">
+[
+  "https://track-here.cityads.com/magic-truck?data=%7B%22campaignSecret%22%3A%22foo%22%2C%22click_id%22%3A%2262920%22%2C%22order_id%22%3A%22JS%22%2C%22matches%22%3A%7B%7D%2C%22timestamp%22%3A1614878678841%7D",
+  "https://track-there.cityads.com/magic-truck?data=%7B%22campaignSecret%22%3A%22foo%22%2C%22click_id%22%3A%2262920%22%2C%22order_id%22%3A%22JS%22%2C%22matches%22%3A%7B%7D%2C%22timestamp%22%3A1614878612086%7D"
+]
+				</textarea>
+				<button id="replace-pending-data">Установить</button>
+				Отправка будет произведена автоматически после стандартной задержки.
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3">
+				<textarea id="app-log"></textarea>
+			</td>
+		</tr>
+	</table>
+	<script type="text/javascript">
+		document.getElementById('save-tracking-script').onclick = function () {
+			var code = document.getElementById('tracking-script').textContent;
+
+			var file = new Blob([code], { type: 'text/javascript' }),
+				a = document.createElement('a'),
+				url = URL.createObjectURL(file);
+
+			a.href = url;
+			a.download = 'tracker.js';
+			document.body.appendChild(a);
+			a.click();
+
+			setTimeout(function () {
+				document.body.removeChild(a);
+				window.URL.revokeObjectURL(url);
+			}, 0);
+		};
+
+		document.getElementById('copy-tracking-script').onclick = function () {
+			var code = document.getElementById('tracking-script').textContent;
+
+			navigator.clipboard.writeText(code);
+		};
+
+		document.getElementById('clear-ls').onclick = function () {
+			localStorage.clear();
+		};
+
+		document.getElementById('replace-saved-settings').onclick = function () {
+			var value = document.getElementById('saved-settings').value;
+
+			try {
+				window.caMT.savedSettings = JSON.parse(value);
+				caMT.writeSavedSettings();
+			} catch (e) {
+				alert(e.message);
+			}
+		};
+
+		document.getElementById('replace-pending-urls').onclick = function () {
+			var value = document.getElementById('pending-urls').value;
+
+			try {
+				var urls = JSON.parse(value);
+				localStorage.setItem('ca_magic_truck_urls', JSON.stringify(urls));
+			} catch (e) {
+				alert(e.message);
+			}
+		};
+
+		document.getElementById('replace-pending-data').onclick = function () {
+			var value = document.getElementById('pending-data').value;
+
+			try {
+				caMT.replaceAllTrackData(JSON.parse(value));
+				caMT.scheduleFlushPendingTrackData();
+			} catch (e) {
+				alert(e.message);
+			}
+		};
+	</script>
+</body>
+</html>
