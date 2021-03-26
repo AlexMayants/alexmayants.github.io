@@ -259,40 +259,6 @@
 				function onLoad() {
 					self.processHtml();
 				}
-				var i,
-					secret,
-					clickId,
-					orderId,
-					urls = this.getPreviousUrls();
-
-				urls.push(window.location.href);
-
-				for (i = 0; i < this.offerSecrets.length; i++) {
-					secret = this.offerSecrets[i];
-
-					if (!this.detectHit(secret, urls)) { continue; }
-
-					if (!(clickId = this.detectClickId(secret, urls))) { continue; }
-
-					this.saveClickId(secret, clickId);
-					this.clearPreviousUrls();
-					break;
-				}
-
-				var html = document.documentElement.outerHTML;
-
-				for (i = 0; i < this.offerSecrets.length; i++) {
-					secret = this.offerSecrets[i];
-					clickId = this.getClickId(secret);
-
-					if (!clickId) { continue; }
-
-					if (!this.detectOrder(secret, html)) { continue; }
-
-					if (!(orderId = this.detectOrderId(secret, html))) { continue; }
-
-					this.trackOrder(secret, clickId, orderId, this.detectOtherStuff(secret, html));
-				}
 			};
 
 			CAMagicTracker.prototype.processUrls = function () {
