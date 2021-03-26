@@ -37,7 +37,7 @@
 			function K(e) {
 				var l = e.target
 				while (l && l.tagName !== 'A') l = l.parentElement
-				if (l && l.hasAttribute(O))
+				if (l && l.href.match(O))
 					S('https://' + l.host + M,  l.href)
 			}
 			
@@ -57,7 +57,7 @@
 				c[y]('DOMContentLoaded', L, false)
 			else if (i[a])
 				i[a]('onload', L)
-		})(document, window, navigator, 'addEventListener', 'attachEvent', 'click', 'readyState', 'sendBeacon', 'data-cityads-link', '/track-check')
+		})(document, window, navigator, 'addEventListener', 'attachEvent', 'click', 'readyState', 'sendBeacon', /\/click-/, '/track-check')
 	</script>
 </body>
 </html>
