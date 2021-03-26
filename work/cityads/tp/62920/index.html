@@ -180,7 +180,7 @@
 					secret;
 
 				var xhr = new XMLHttpRequest();
-				xhr.open('GET', this.settingsUrl + encodeURIComponent(secrets.join(',')), true);
+				xhr.open('GET', this.settingsUrl + '?campaign_secrets[]=' + encodeURIComponent(secrets.join('&campaign_secrets[]=')), true);
 				xhr.responseType = 'json';
 				xhr.onload = function () {
 					if (xhr.status !== 200) {
