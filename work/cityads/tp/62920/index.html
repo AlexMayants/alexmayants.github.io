@@ -115,7 +115,7 @@
 					var secret = this.offerSecrets[i];
 
 					if (this.savedSettings[secret] && (new Date(this.savedSettings[secret].date + this.settingsCacheLifetime) > new Date())) {
-						this.settings[secret] = this.savedSettings[secret].settings || {};
+						this.settings[secret] = this.savedSettings[secret].data || {};
 					} else {
 						requestSecrets.push(secret);
 					}
@@ -175,22 +175,59 @@
 				this.writeLS(this.settingsCacheName, JSON.stringify(this.savedSettings));
 			};
 
+			CAMagicTracker.prototype.convertRegexpResponse = function (responseData) {
+				var converted = {};
+
+				if (this.isArray(responseData)) {
+					for (var i = 0; i < responseData.length; i++) {
+						var responseItem = responseData[i];
+
+						if (!responseItem) { continue; }
+
+						var campaignSecret = responseItem.settings.campaign_secret,
+							type = responseItem.type;
+
+						if (!converted[campaignSecret]) {
+							converted[campaignSecret] = {};
+						}
+
+						if (!converted[campaignSecret].trackDomain) {
+							converted[campaignSecret].trackDomain = responseItem.settings.track_domain;
+						}
+
+						if (!converted[campaignSecret][type]) {
+							converted[campaignSecret][type] = {};
+						}
+
+						converted[campaignSecret][type][responseItem.name] = responseItem.value;
+					}
+				}
+
+				return converted;
+			};
+
 			CAMagicTracker.prototype.loadSettings = function (secrets) {
 				var self = this,
-					secret;
+					encodedSecrets = [];
+
+				for (var i = 0; i < secrets.length; i++) {
+					encodedSecrets.push('campaign_secrets[]=' + encodeURIComponent(secrets[i]));
+				}
 
 				var xhr = new XMLHttpRequest();
-				xhr.open('GET', this.settingsUrl + '?campaign_secrets[]=' + encodeURIComponent(secrets.join('&campaign_secrets[]=')), true);
+				xhr.open('GET', this.settingsUrl + '?' + encodedSecrets.join('&'), true);
 				xhr.responseType = 'json';
 				xhr.onload = function () {
 					if (xhr.status !== 200) {
 						self.saveCurrentUrl();
 					} else {
-						for (secret in xhr.response) {
-							if (xhr.response.hasOwnProperty(secret)) {
-								self.settings[secret] = xhr.response[secret];
+						var convertedResponse = self.convertRegexpResponse(xhr.response);
+
+						for (var secret in convertedResponse) {
+							if (convertedResponse.hasOwnProperty(secret)) {
+								self.settings[secret] = convertedResponse[secret];
 								self.savedSettings[secret] = {
-									data: xhr.response[secret],
+									data: convertedResponse[secret],
 									date: +(new Date())
 								};
 							}
@@ -300,14 +337,14 @@
 
 			CAMagicTracker.prototype.detectHit = function (secret, urls) {
 				var settings = this.settings[secret],
-					hitDetectors = settings && settings.detectCityRegexps;
+					hitDetectors = settings && settings.is_city;
 
 				return !!this.findFirstMatchNameAndValue(hitDetectors, urls);
 			};
 
 			CAMagicTracker.prototype.detectClickId = function (secret, urls) {
 				var settings = this.settings[secret],
-					clickIdDetectors = settings && settings.detectClickIdRegexps;
+					clickIdDetectors = settings && settings.click_id;
 
 				var match = this.findFirstMatchNameAndValue(clickIdDetectors, urls);
 
@@ -320,14 +357,14 @@
 
 			CAMagicTracker.prototype.detectOrder = function (secret, html) {
 				var settings = this.settings[secret],
-					orderDetectors = settings && settings.detectOrderCompletedRegexps;
+					orderDetectors = settings && settings.order_completed;
 
 				return !!this.findFirstMatchNameAndValue(orderDetectors, [html]);
 			};
 
 			CAMagicTracker.prototype.detectOrderId = function (secret, html) {
 				var settings = this.settings[secret],
-					orderIdDetectors = settings && settings.detectOrderIDRegexps;
+					orderIdDetectors = settings && settings.order_id;
 
 				var match = this.findFirstMatchNameAndValue(orderIdDetectors, [html]);
 
@@ -340,7 +377,7 @@
 
 			CAMagicTracker.prototype.detectOtherStuff = function (secret, html) {
 				var settings = this.settings[secret],
-					stuffDetectors = settings && settings.otherRegexps;
+					stuffDetectors = settings && settings.other;
 
 				return this.findAllMatches(stuffDetectors, html);
 			};
@@ -370,19 +407,37 @@
 
 				for (var regexpName in regexpObj) {
 					if (regexpObj.hasOwnProperty(regexpName) && regexpObj[regexpName]) {
-						var regexp = new RegExp(regexpObj[regexpName]);
+						var regexpMatches = this.matchAll(string, regexpObj[regexpName]),
+							parsingResults = [];
 
-						if (regexp) {
-							var match = string.match(regexp);
+						for (var i = 0; i < regexpMatches.length; i++) {
+							var match = regexpMatches[i];
 
-							if (match && match[1]) {
-								matches[regexpName] = match[1];
+							if (match[1]) {
+								parsingResults.push(match[1]);
 							}
+						}
+
+						if (parsingResults.length > 0) {
+							matches[regexpName] = parsingResults;
 						}
 					}
 				}
 
 				return matches;
+			};
+
+			// String.prototype.matchAll implementation
+			CAMagicTracker.prototype.matchAll = function (string, regexpString) {
+				var regexp = new RegExp(regexpString, 'g'),
+					result = [],
+					match;
+
+				while (match = string.exec(regexp)) {
+					result.push(match);
+				}
+
+				return result;
 			};
 
 			CAMagicTracker.prototype.trackOrder = function (secret, clickId, orderId, matches) {
@@ -544,18 +599,18 @@
 				<textarea id="saved-settings">
 {
   "foo": {
-    "settings": {
-      "detectCityRegexps": { "a": "utm_source=cityads", "b": "Z:" },
-      "detectClickIdRegexps": { "c": "[?&]click_id=([^&]+)" },
-      "detectOrderCompletedRegexps": { "d": "успешн[а-я]+ заказ[а-я]*" },
-      "detectOrderIDRegexps": { "e": "order_id=(\\d+)" },
-      "otherRegexps": { "order_cost": "order_cost=(\\d+)" },
+    "data": {
+      "is_city": { "a": "utm_source=cityads", "b": "Z:" },
+      "click_id": { "c": "[?&]click_id=([^&]+)" },
+      "order_completed": { "d": "успешн[а-я]+ заказ[а-я]*" },
+      "order_id": { "e": "order_id=(\\d+)" },
+      "other": { "order_cost": "order_cost=(\\d+)" },
       "trackDomain": "https://track-it-all.cityads.com"
     },
     "date": 1640984399000
   },
   "bar": {
-    "settings": {},
+    "data": {},
     "date": 1640984399000
   }
 }
