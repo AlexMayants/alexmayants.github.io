@@ -95,7 +95,7 @@
 
 	<script type="text/javascript" id="tracking-script">
 		(function (window, document, localStorageName) {
-			function CAMagicTracker(_settingsCacheName, _urlCacheName, _clickIdPrefix, _trackDataCacheName, _settingsUrl, _offerSecrets, _settingsCacheLifetime, _trackDelay) {
+			function CAMagicTracker(_settingsCacheName, _urlCacheName, _clickIdPrefix, _trackDataCacheName, _settingsUrl, _offerSecrets, _settingsCacheLifetime, _trackDelay, _trackAttempts) {
 				this.settingsCacheName = _settingsCacheName;
 				this.urlCacheName = _urlCacheName;
 				this.clickIdPrefix = _clickIdPrefix;
@@ -104,6 +104,7 @@
 				this.offerSecrets = _offerSecrets;
 				this.settingsCacheLifetime = _settingsCacheLifetime;
 				this.trackDelay = _trackDelay;
+				this.trackAttempts = _trackAttempts;
 
 				this.readSavedSettings();
 
@@ -463,7 +464,11 @@
 						matches: matches,
 						timestamp: +(new Date())
 					},
-					data = trackDomain + '/magic-truck?data=' + encodeURIComponent(JSON.stringify(trackData));
+					data = {
+						trackDomain: trackDomain,
+						trackData: trackData,
+						attempt: 1
+					};
 
 				this.sendTrackData(
 					data,
@@ -477,7 +482,7 @@
 
 			CAMagicTracker.prototype.sendTrackData = function (data, cb, errCb) {
 				var xhr = new XMLHttpRequest();
-				xhr.open('POST', data, true);
+				xhr.open('POST', data.trackDomain + '/magic-truck?data=' + encodeURIComponent(JSON.stringify(data.trackData)), true);
 				xhr.onload = function () {
 					if (xhr.status !== 200) {
 						errCb(data);
@@ -552,8 +557,12 @@
 						},
 						function (data) {
 							processedCount++;
-							erroredData.push(data);
-							checkTrackingFinished();
+							data.attempt++;
+
+							if (data.attempt < self.trackAttempts) {
+								erroredData.push(data);
+								checkTrackingFinished();
+							}
 						}
 					);
 				}
@@ -583,7 +592,8 @@
 			'https://magic-truck.cityads.com/settings/',
 			['foo', 'bar'],
 			600000,
-			10000
+			10000,
+			5
 		);
 	</script>
 </head>
@@ -642,8 +652,16 @@
 				Введите данные, которые будут сохранены в кеше отправки.
 				<textarea id="pending-data">
 [
-  "https://track-here.cityads.com/magic-truck?data=%7B%22campaignSecret%22%3A%22foo%22%2C%22click_id%22%3A%2262920%22%2C%22order_id%22%3A%22JS%22%2C%22matches%22%3A%7B%7D%2C%22timestamp%22%3A1614878678841%7D",
-  "https://track-there.cityads.com/magic-truck?data=%7B%22campaignSecret%22%3A%22foo%22%2C%22click_id%22%3A%2262920%22%2C%22order_id%22%3A%22JS%22%2C%22matches%22%3A%7B%7D%2C%22timestamp%22%3A1614878612086%7D"
+  {
+    "trackDomain": "https://track-here.cityads.com",
+    "trackData": {"campaignSecret":"foo","click_id":"12345","order_id":"JS","matches":{},"timestamp":1614878678841},
+    "attempt": 0
+  },
+  {
+    "trackDomain": "https://track-there.cityads.com",
+    "trackData": {"campaignSecret":"foo","click_id":"67890","order_id":"JS","matches":{},"timestamp":1614878678841},
+    "attempt": 0
+  }
 ]
 				</textarea>
 				<button id="replace-pending-data">Установить</button>
