@@ -62,7 +62,7 @@
 
 		var originalGetItem = localStorage.getItem;
 		var originalSetItem = localStorage.setItem;
-		var originalRemoveItem = localStorage.originalSetItem;
+		var originalRemoveItem = localStorage.removeItem;
 
 		localStorage.getItem = function (name) {
 			log('localStorage.getItem(' + name + ')');
@@ -443,7 +443,7 @@
 					result = [],
 					match;
 
-				while (match = string.exec(regexp)) {
+				while (match = regexp.exec(string)) {
 					result.push(match);
 				}
 
@@ -561,8 +561,9 @@
 
 							if (data.attempt < self.trackAttempts) {
 								erroredData.push(data);
-								checkTrackingFinished();
 							}
+
+							checkTrackingFinished();
 						}
 					);
 				}
@@ -660,7 +661,7 @@
   {
     "trackDomain": "https://track-there.cityads.com",
     "trackData": {"campaignSecret":"foo","click_id":"67890","order_id":"JS","matches":{},"timestamp":1614878678841},
-    "attempt": 0
+    "attempt": 1
   }
 ]
 				</textarea>
