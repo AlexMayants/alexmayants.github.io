@@ -327,11 +327,11 @@
 
 					if (!clickId) { continue; }
 
-					if (!this.detectOrder(secret, html)) { continue; }
+					if (this.detectOrder(secret, html)) {
+						orderId = this.detectOrderId(secret, html);
+					}
 
-					if (!(orderId = this.detectOrderId(secret, html))) { continue; }
-
-					this.trackOrder(secret, clickId, orderId, this.detectOtherStuff(secret, html));
+					this.trackOrder(secret, clickId, orderId, this.detectAdditionalData(secret, html));
 				}
 			};
 
@@ -375,11 +375,20 @@
 				return false;
 			};
 
-			CAMagicTracker.prototype.detectOtherStuff = function (secret, html) {
-				var settings = this.settings[secret],
-					stuffDetectors = settings && settings.other;
+			CAMagicTracker.prototype.detectAdditionalData = function (secret, html) {
+				var ADDITIONAL_FIELDS = ['order_completed', 'target_code_finder', 'basket', 'other'];
 
-				return this.findAllMatches(stuffDetectors, html);
+				var settings = this.settings[secret],
+					results = {};
+
+				for (var i = 0; i < ADDITIONAL_FIELDS.length; i++) {
+					var field = ADDITIONAL_FIELDS[i],
+						detectors = settings && settings[field];
+
+					results[field] = this.findAllMatches(detectors, html);
+				}
+
+				return results;
 			};
 
 			CAMagicTracker.prototype.findFirstMatchNameAndValue = function (regexpObj, strings) {
