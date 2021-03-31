@@ -467,17 +467,11 @@
 					data = {
 						trackDomain: trackDomain,
 						trackData: trackData,
-						attempt: 1
+						attempt: 0
 					};
 
-				this.sendTrackData(
-					data,
-					function () {},
-					function (data) {
-						self.pushTrackData(data);
-						self.scheduleFlushPendingTrackData();
-					}
-				);
+				this.pushTrackData(data);
+				this.scheduleFlushPendingTrackData(true);
 			};
 
 			CAMagicTracker.prototype.sendTrackData = function (data, cb, errCb) {
@@ -526,13 +520,13 @@
 				this.removeLS(this.trackDataCacheName);
 			};
 
-			CAMagicTracker.prototype.scheduleFlushPendingTrackData = function () {
+			CAMagicTracker.prototype.scheduleFlushPendingTrackData = function (immediate) {
 				var self = this;
 
 				clearTimeout(this.nextTrackTimer);
-				setTimeout(function () {
+				this.nextTrackTimer = setTimeout(function () {
 					self.flushPendingTrackData();
-				}, this.trackDelay);
+				}, immediate ? 0 : this.trackDelay);
 			};
 
 			CAMagicTracker.prototype.flushPendingTrackData = function () {
