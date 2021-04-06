@@ -457,7 +457,7 @@
 				if (!trackDomain) { return; }
 
 				var trackData = {
-						campaignSecret: secret,
+						campaign_secret: secret,
 						click_id: clickId,
 						order_id: orderId,
 						matches: matches,
@@ -475,7 +475,7 @@
 
 			CAMagicTracker.prototype.sendTrackData = function (data, cb, errCb) {
 				var xhr = new XMLHttpRequest();
-				xhr.open('POST', data.trackDomain + '/magic-truck?data=' + encodeURIComponent(JSON.stringify(data.trackData)), true);
+				xhr.open('POST', data.trackDomain + '/magic-track?data=' + encodeURIComponent(JSON.stringify(data.trackData)), true);
 				xhr.onload = function () {
 					if (xhr.status !== 200) {
 						errCb(data);
@@ -648,12 +648,12 @@
 [
   {
     "trackDomain": "https://track-here.cityads.com",
-    "trackData": {"campaignSecret":"foo","click_id":"12345","order_id":"JS","matches":{},"timestamp":1614878678841},
+    "trackData": {"campaign_secret":"foo","click_id":"12345","order_id":"JS","matches":{},"timestamp":1614878678841},
     "attempt": 0
   },
   {
     "trackDomain": "https://track-there.cityads.com",
-    "trackData": {"campaignSecret":"foo","click_id":"67890","order_id":"JS","matches":{},"timestamp":1614878678841},
+    "trackData": {"campaign_secret":"foo","click_id":"67890","order_id":"JS","matches":{},"timestamp":1614878678841},
     "attempt": 1
   }
 ]
