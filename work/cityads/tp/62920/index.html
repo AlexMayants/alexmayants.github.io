@@ -327,16 +327,11 @@
 
 				for (var i = 0; i < this.offerSecrets.length; i++) {
 					var secret = this.offerSecrets[i],
-						clickId = this.getClickId(secret),
-						orderId;
+						clickId = this.getClickId(secret);
 
 					if (!clickId) { continue; }
 
-					if (this.detectOrder(secret, html)) {
-						orderId = this.detectOrderId(secret, html);
-					}
-
-					this.trackOrder(secret, clickId, orderId, this.detectAdditionalData(secret, html));
+					this.trackOrder(secret, clickId, this.detectAdditionalData(secret, html));
 				}
 			};
 
@@ -360,37 +355,20 @@
 				return false;
 			};
 
-			CAMagicTracker.prototype.detectOrder = function (secret, html) {
-				var settings = this.settings[secret],
-					orderDetectors = settings && settings.order_completed;
-
-				return !!this.findFirstMatchNameAndValue(orderDetectors, [html]);
-			};
-
-			CAMagicTracker.prototype.detectOrderId = function (secret, html) {
-				var settings = this.settings[secret],
-					orderIdDetectors = settings && settings.order_id;
-
-				var match = this.findFirstMatchNameAndValue(orderIdDetectors, [html]);
-
-				if (match) {
-					return match[1][1];
-				}
-
-				return false;
-			};
-
 			CAMagicTracker.prototype.detectAdditionalData = function (secret, html) {
-				var ADDITIONAL_FIELDS = ['order_completed', 'target_code_finder', 'basket', 'other'];
+				var ADDITIONAL_FIELDS = ['order_completed', 'order_id', 'target_code_finder', 'basket', 'other'];
 
 				var settings = this.settings[secret],
 					results = {};
 
 				for (var i = 0; i < ADDITIONAL_FIELDS.length; i++) {
 					var field = ADDITIONAL_FIELDS[i],
-						detectors = settings && settings[field];
+						detectors = settings && settings[field],
+						matches = this.findAllMatches(detectors, html);
 
-					results[field] = this.findAllMatches(detectors, html);
+					if (matches) {
+						results[field] = matches;
+					}
 				}
 
 				return results;
@@ -417,7 +395,8 @@
 			};
 
 			CAMagicTracker.prototype.findAllMatches = function (regexpObj, string) {
-				var matches = {};
+				var matches = {},
+					found = false;
 
 				for (var regexpName in regexpObj) {
 					if (regexpObj.hasOwnProperty(regexpName) && regexpObj[regexpName]) {
@@ -434,8 +413,13 @@
 
 						if (parsingResults.length > 0) {
 							matches[regexpName] = parsingResults;
+							found = true;
 						}
 					}
+				}
+
+				if (!found) {
+					return null;
 				}
 
 				return matches;
@@ -454,7 +438,7 @@
 				return result;
 			};
 
-			CAMagicTracker.prototype.trackOrder = function (secret, clickId, orderId, matches) {
+			CAMagicTracker.prototype.trackOrder = function (secret, clickId, matches) {
 				var settings = this.settings[secret],
 					trackDomain = settings && settings.trackDomain;
 
@@ -463,7 +447,6 @@
 				var trackData = {
 						campaign_secret: secret,
 						click_id: clickId,
-						order_id: orderId,
 						matches: matches,
 						timestamp: +(new Date())
 					},
@@ -478,8 +461,15 @@
 			};
 
 			CAMagicTracker.prototype.sendTrackData = function (data, cb, errCb) {
+				var trackData = data.trackData,
+					url = data.trackDomain + '/magic-track' +
+						'?campaign_secret=' + encodeURIComponent(trackData.campaign_secret) +
+						'&click_id=' + encodeURIComponent(trackData.click_id) +
+						'&matches=' + encodeURIComponent(JSON.stringify(trackData.matches)) +
+						'&timestamp=' + encodeURIComponent(trackData.timestamp);
+
 				var xhr = new XHR();
-				xhr.open('POST', data.trackDomain + '/magic-track?data=' + encodeURIComponent(JSON.stringify(data.trackData)), true);
+				xhr.open('POST', url, true);
 				xhr.onload = function () {
 					if (xhr.status !== 200) {
 						errCb(data);
