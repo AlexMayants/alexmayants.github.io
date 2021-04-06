@@ -95,6 +95,8 @@
 
 	<script type="text/javascript" id="tracking-script">
 		(function (window, document, localStorageName) {
+			var XHR = ('onload' in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
+
 			function CAMagicTracker(_settingsCacheName, _urlCacheName, _clickIdPrefix, _trackDataCacheName, _settingsUrl, _offerSecrets, _settingsCacheLifetime, _trackDelay, _trackAttempts) {
 				this.settingsCacheName = _settingsCacheName;
 				this.urlCacheName = _urlCacheName;
@@ -215,7 +217,7 @@
 					encodedSecrets.push('campaign_secrets[]=' + encodeURIComponent(secrets[i]));
 				}
 
-				var xhr = new XMLHttpRequest();
+				var xhr = new XHR();
 				xhr.open('GET', this.settingsUrl + '?' + encodedSecrets.join('&'), true);
 				xhr.responseType = 'json';
 				xhr.onload = function () {
@@ -241,7 +243,9 @@
 				xhr.onerror = function () {
 					self.saveCurrentUrl();
 				};
-				xhr.send();
+				setTimeout(function () { // see https://developer.mozilla.org/en-US/docs/Web/API/XDomainRequest
+					xhr.send();
+				}, 0);
 			};
 
 			CAMagicTracker.prototype.getPreviousUrls = function () {
@@ -474,7 +478,7 @@
 			};
 
 			CAMagicTracker.prototype.sendTrackData = function (data, cb, errCb) {
-				var xhr = new XMLHttpRequest();
+				var xhr = new XHR();
 				xhr.open('POST', data.trackDomain + '/magic-track?data=' + encodeURIComponent(JSON.stringify(data.trackData)), true);
 				xhr.onload = function () {
 					if (xhr.status !== 200) {
@@ -486,7 +490,9 @@
 				xhr.onerror = function () {
 					errCb(data);
 				};
-				xhr.send();
+				setTimeout(function () {
+					xhr.send();
+				}, 0);
 			};
 
 			CAMagicTracker.prototype.getPendingTrackData = function () {
