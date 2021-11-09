@@ -97,13 +97,13 @@
 		(function (window, document, localStorageName) {
 			var XHR = ('onload' in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
 
-			function CAMagicTracker(_settingsCacheName, _urlCacheName, _clickIdPrefix, _trackDataCacheName, _settingsUrl, _offerSecrets, _settingsCacheLifetime, _trackDelay, _trackAttempts) {
+			function CAMagicTracker(_settingsCacheName, _urlCacheName, _clickIdPrefix, _trackDataCacheName, _settingsUrl, _citySecrets, _settingsCacheLifetime, _trackDelay, _trackAttempts) {
 				this.settingsCacheName = _settingsCacheName;
 				this.urlCacheName = _urlCacheName;
 				this.clickIdPrefix = _clickIdPrefix;
 				this.trackDataCacheName = _trackDataCacheName;
 				this.settingsUrl = _settingsUrl;
-				this.offerSecrets = _offerSecrets;
+				this.citySecrets = _citySecrets;
 				this.settingsCacheLifetime = _settingsCacheLifetime;
 				this.trackDelay = _trackDelay;
 				this.trackAttempts = _trackAttempts;
@@ -114,8 +114,8 @@
 
 				var requestSecrets = [];
 
-				for (var i = 0; i < this.offerSecrets.length; i++) {
-					var secret = this.offerSecrets[i];
+				for (var i = 0; i < this.citySecrets.length; i++) {
+					var secret = this.citySecrets[i];
 
 					if (this.savedSettings[secret] && (new Date(this.savedSettings[secret].date + this.settingsCacheLifetime) > new Date())) {
 						this.settings[secret] = this.savedSettings[secret].data || {};
@@ -202,7 +202,10 @@
 							converted[campaignSecret][type] = {};
 						}
 
-						converted[campaignSecret][type][responseItem.name] = responseItem.value;
+						converted[campaignSecret][type][responseItem.name] = {
+							regexp: responseItem.value,
+							flags: responseItem.flags ?? '',
+						};
 					}
 				}
 
@@ -308,8 +311,8 @@
 
 				urls.push(window.location.href);
 
-				for (var i = 0; i < this.offerSecrets.length; i++) {
-					var secret = this.offerSecrets[i],
+				for (var i = 0; i < this.citySecrets.length; i++) {
+					var secret = this.citySecrets[i],
 						clickId;
 
 					if (!this.detectHit(secret, urls)) { continue; }
@@ -325,8 +328,8 @@
 			CAMagicTracker.prototype.processHtml = function () {
 				var html = document.documentElement.outerHTML;
 
-				for (var i = 0; i < this.offerSecrets.length; i++) {
-					var secret = this.offerSecrets[i],
+				for (var i = 0; i < this.citySecrets.length; i++) {
+					var secret = this.citySecrets[i],
 						clickId = this.getClickId(secret);
 
 					if (!clickId) { continue; }
@@ -377,7 +380,8 @@
 			CAMagicTracker.prototype.findFirstMatchNameAndValue = function (regexpObj, strings) {
 				for (var regexpName in regexpObj) {
 					if (regexpObj.hasOwnProperty(regexpName) && regexpObj[regexpName]) {
-						var regexp = new RegExp(regexpObj[regexpName]);
+						var regexpData = regexpObj[regexpName],
+							regexp = new RegExp(regexpData.regexp, regexpData.flags);
 
 						if (regexp) {
 							for (var i = 0; i < strings.length; i++) {
@@ -426,8 +430,9 @@
 			};
 
 			// String.prototype.matchAll implementation
-			CAMagicTracker.prototype.matchAll = function (string, regexpString) {
-				var regexp = new RegExp(regexpString, 'g'),
+			CAMagicTracker.prototype.matchAll = function (string, regexpData) {
+				var flags = regexpData.flags.indexOf('g') >= 0 ? regexpData.flags : regexpData.flags + 'g',
+					regexp = new RegExp(regexpData.regexp, flags),
 					result = [],
 					match;
 
@@ -462,7 +467,7 @@
 
 			CAMagicTracker.prototype.sendTrackData = function (data, cb, errCb) {
 				var trackData = data.trackData,
-					url = data.trackDomain + '/magic-track' +
+					url = data.trackDomain + '/smart-track' +
 						'?campaign_secret=' + encodeURIComponent(trackData.campaign_secret) +
 						'&click_id=' + encodeURIComponent(trackData.click_id) +
 						'&matches=' + encodeURIComponent(JSON.stringify(trackData.matches)) +
@@ -571,6 +576,37 @@
 				}
 			};
 
+			CAMagicTracker.prototype.watchChanges = function (node) {
+				this.unwatchChanges();
+
+				if (!window.MutationObserver) {
+					return;
+				}
+
+				var self = this;
+
+				this.observer = new MutationObserver(function (mutationRecords) {
+					if (self.mutationTimer) { return; }
+
+					self.mutationTimer = setTimeout(function () {
+						self.mutationTimer = null;
+						self.processHtml();
+					}, 500);
+				});
+
+				this.observer.observe(node || document.body, {
+					childList: true,
+					subtree: true,
+					characterData: true
+				});
+			};
+
+			CAMagicTracker.prototype.unwatchChanges = function () {
+				if (this.observer) {
+					this.observer.disconnect();
+				}
+			};
+
 			window.CAMagicTracker = CAMagicTracker;
 		})(window, document, 'localStorage');
 
@@ -609,11 +645,11 @@
 {
   "foo": {
     "data": {
-      "is_city": { "a": "utm_source=cityads", "b": "Z:" },
-      "click_id": { "c": "[?&]click_id=([^&]+)" },
-      "order_completed": { "d": "успешн[а-я]+ заказ[а-я]*" },
-      "order_id": { "e": "order_id=(\\d+)" },
-      "other": { "order_cost": "order_cost=(\\d+)" },
+      "is_city": { "a": { "regexp": "utm_source=cityads", "flags": "" }, "b": { "regexp": "Z:", "flags": "" } },
+      "click_id": { "c": { "regexp": "[?&]click_id=([^&]+)", "flags": "" } },
+      "order_completed": { "d": { "regexp": "успешн[а-я]+ заказ[а-я]*", "flags": "" } },
+      "order_id": { "e": { "regexp": "order_id=(\\d+)", "flags": "" } },
+      "other": { "order_cost": { "regexp": "order_cost=(\\d+)", "flags": "" } },
       "trackDomain": "https://track-it-all.cityads.com"
     },
     "date": 1640984399000
